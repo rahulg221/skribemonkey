@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:skribemonkey/screens/home_screen.dart';
 import 'package:skribemonkey/screens/login_screen.dart';
+import 'package:skribemonkey/screens/register_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -19,6 +20,6 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
         ),
-        home: Scaffold(appBar: AppBar(), body: HomeScreen()));
+        home: Scaffold(appBar: AppBar(), body: RegisterScreen()));
   }
 }
