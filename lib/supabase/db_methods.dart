@@ -8,16 +8,15 @@ class DatabaseMethods {
   // User methods
 
   // Create a User
-  Future<void> createUser(String name, String email, String password, String role) async {
-    try{
+  Future<void> createUser(
+      String name, String email, String password, String role) async {
+    try {
       // Sign up the user with email and password
-      final authResponse = await _client.auth.signUp(
-        email: email, 
-        password: password
-      );
+      final authResponse =
+          await _client.auth.signUp(email: email, password: password);
 
       if (authResponse.user == null) {
-          throw Exception('Error creating user. Please try again later');
+        throw Exception('Error creating user. Please try again later');
       }
 
       // After signing up, get the user's ID
@@ -105,22 +104,22 @@ class DatabaseMethods {
     }
   }
 
-
-  // Patient Methods 
+  // Patient Methods
 
   // Create a Patient
-  Future<void> createPatient(String name, String email, String user_id, String gender, Iterable preexisting_conditions) async {
-    try{
-      final String patient_id = Uuid().v4();
+  Future<void> createPatient(String name, String email, String userId,
+      String gender, Iterable preexistingConditions) async {
+    try {
+      final String patientId = Uuid().v4();
 
       // Insert additional user information into the users table
       await _client.rpc('AddPatient', params: {
-        'id': patient_id,
-        'user_id': user_id,
+        'id': patientId,
+        'user_id': userId,
         'name': name,
         'email': email,
         'gender': gender,
-        'preexisting_conditions': preexisting_conditions,
+        'preexisting_conditions': preexistingConditions,
         'created_at': DateTime.now().toIso8601String()
       });
     }
@@ -135,7 +134,7 @@ class DatabaseMethods {
       // Fetch all users
       final response = await _client.rpc('SelectAllPatients');
 
-      if (response.error != null) {
+      if (response.error == null) {
         throw Exception('Failed to fetch patients');
         
       } 
@@ -150,15 +149,15 @@ class DatabaseMethods {
     }
   }
 
-  Future<Iterable<dynamic>?> fetchPatientById(String patient_id) async {
+  Future<Iterable<dynamic>?> fetchPatientById(String patientId) async {
     try {
       // Fetch user by ID
       final response = await _client.rpc('GetPatientByID', params: {
-        'id': patient_id
+        'id': patientId
       });
 
-      if (response.error != null) {
-        throw Exception('Failed to fetch entry: $patient_id');
+      if (response.error == null) {
+        throw Exception('Failed to fetch entry: $patientId');
         
       } 
       else {
@@ -189,10 +188,10 @@ class DatabaseMethods {
   }
 
   // Delete Patient
-  Future<void> deletePatient(String patient_id) async {
+  Future<void> deletePatient(String patientId) async {
     try{
       await _client.rpc('DeletePatient', params: {
-        'id': patient_id
+        'id': patientId
       });
     }
     on PostgrestException catch (error){
@@ -200,25 +199,31 @@ class DatabaseMethods {
     }
   }
 
-
   // Entry Methods
 
   // Create a Entry
-  Future<void> createEntry(String id, String patient_id, String user_id, String treatment, String condition, String urgency_level, String RAW_summary, String Summary) async {
-    try{
-      
-      final String entry_id = Uuid().v4();
-   
+  Future<void> createEntry(
+      String id,
+      String patientId,
+      String userId,
+      String treatment,
+      String condition,
+      String urgencyLevel,
+      String rawSummary,
+      String Summary) async {
+    try {
+      final String entryId = Uuid().v4();
+
       // Insert additional user information into the users table
       await _client.rpc('AddEntry', params: {
         'id': id,
-        'patient_id': patient_id,
-        'user_id': user_id,
+        'patient_id': patientId,
+        'user_id': userId,
         'condition': condition,
         'treatment': treatment,
-        'urgency_level': urgency_level,
+        'urgency_level': urgencyLevel,
         'created_at': DateTime.now().toIso8601String(),
-        'RAW_summary': RAW_summary, 
+        'RAW_summary': rawSummary, 
         'Summary': Summary
       });
     }
@@ -233,7 +238,7 @@ class DatabaseMethods {
       // Fetch all users
       final response = await _client.rpc('SelectAllEntries');
 
-      if (response.error != null) {
+      if (response.error == null) {
         throw Exception('Failed to fetch entries');
         
       } 
@@ -248,15 +253,15 @@ class DatabaseMethods {
     }
   }
 
-  Future<Iterable<dynamic>?> fetchEntryById(String entry_id) async {
+  Future<Iterable<dynamic>?> fetchEntryById(String entryId) async {
     try {
       // Fetch user by ID
       final response = await _client.rpc('GetEntryByID', params: {
-        'id': entry_id
+        'id': entryId
       });
 
-      if (response.error != null) {
-        throw Exception('Failed to fetch entry: $entry_id');
+      if (response.error == null) {
+        throw Exception('Failed to fetch entry: $entryId');
         
       } 
       else {
