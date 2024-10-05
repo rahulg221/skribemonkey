@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-class Colors {
-  static const Color primaryColor = Color(0xFF6200EE);
-  static const Color secondaryColor = Color(0xFF00C853);
+class Palette {
+  static const Color primaryColor = Color.fromARGB(255, 71, 47, 255);
+  static const Color secondaryColor = Color.fromARGB(255, 102, 173, 255);
 }
