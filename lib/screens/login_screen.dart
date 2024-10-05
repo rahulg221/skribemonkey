@@ -212,13 +212,7 @@ class _LoginScreenState extends State<LoginScreen> {
             SizedBox(
               width: 150, // Reduced width of the Login button
               child: MaterialButton(
-                onPressed: () {
-                  // Navigate to HomeScreen when Login is clicked
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const HomeScreen()),
-                  );
-                },
+                onPressed: isLoading ? null : _handleLogin,
                 color: Palette.primaryColor,
                 padding: const EdgeInsets.all(20),
                 shape: RoundedRectangleBorder(
