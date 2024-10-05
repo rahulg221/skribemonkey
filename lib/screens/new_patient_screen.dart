@@ -242,7 +242,7 @@ class _NewPatientScreenState extends State<NewPatientScreen> {
                   // Placeholder for sign-up action
                 },
                 color: Palette.primaryColor,
-                padding: const EdgeInsets.all(25),
+                padding: const EdgeInsets.all(20),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(25),
                 ),
