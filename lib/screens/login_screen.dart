@@ -46,18 +46,18 @@ class _LoginScreenState extends State<LoginScreen> {
       padding: const EdgeInsets.all(16.0),
       child: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            const SizedBox(height: 35),
             Image.asset(
               'lib/images/logo2.png',
-              width: 250,
-              height: 250,
+              width: 270,
+              height: 270,
             ),
             Text(
               "Skribe Monkey",
               style: TextStyle(
                 color: Palette.primaryColor,
-                fontSize: 60,
+                fontSize: 70,
                 fontFamily: 'quick',
               ),
             ),
@@ -123,7 +123,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 obscureText: true,
               ),
             ),
-            const SizedBox(height: 32),
+            const SizedBox(height: 40),
             SizedBox(
               width: 150, // Reduced width of the Login button
               child: MaterialButton(
@@ -135,7 +135,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   );
                 },
                 color: Palette.primaryColor,
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(20),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(25),
                 ),
@@ -147,7 +147,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
-                      fontSize: 15,
+                      fontSize: 18,
                     ),
                   ),
                 ),
@@ -161,7 +161,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   // Placeholder for sign-up action
                 },
                 color: const Color.fromARGB(255, 228, 228, 228),
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(20),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(25),
                 ),
@@ -173,7 +173,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     style: TextStyle(
                       color: Palette.primaryColor,
                       fontWeight: FontWeight.bold,
-                      fontSize: 15,
+                      fontSize: 18,
                     ),
                   ),
                 ),
