@@ -6,25 +6,28 @@
 // tree, read text, and verify that the values of widget properties are correct.
 
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_test/flutter_test.dart';
-
+import 'package:skribemonkey/external_apis/summarization_methods.dart';
+import 'package:skribemonkey/external_apis/transcription_methods.dart';
 import 'package:skribemonkey/main.dart';
 
-void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+import 'package:flutter_test/flutter_test.dart';
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+void main() async {
+  setUpAll(() async {
+    await dotenv.load(fileName: ".env");
+  });
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+  test('should return an answer from gpt god', () async {
+    // Assuming askGPT is an async method that returns a Future<String>
+    final res = await SummarizationMethods().askGPT('hi whats your name');
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    // Print the result (for debugging purposes)
+    print(res);
+
+    // Check if the response is not null or empty
+    expect(res, isNotNull);
+    expect(res, isNotEmpty);
   });
 }
