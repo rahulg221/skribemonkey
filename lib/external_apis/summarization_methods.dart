@@ -37,22 +37,20 @@ class SummarizationMethods {
   }
 
   // Summarize the appointment transcription
-  void summarizeTranscript() async {
-    String test =
-        'Hi Rayyan, i am nurse amy. How are you doing? I am doing well but i have a very bad headache from falling off my motorcycle. it seems to be bleeding a bit but i am not sure. Oh wow lets get that checked out for you. the doctor will be here soon.';
-
+  Future<String?> summarizeTranscript(String transcript) async {
     String prompt =
-        "CONTEXT: Emergency room nurse speaking to patient. GOAL: Summarize transcript to 3-5 sentences. Focus on key symptoms and urgent conditions. $test";
+        "CONTEXT: Emergency room nurse speaking to patient. GOAL: Summarize symptoms and assess urgency level. FORMAT: Symptom 1 - (1 - 5, least urgent to most urgent). List in a column. If the transcript does not contain any relevant information, return 'NO RELEVANT INFO' $transcript";
 
     String? summary = await askGPT(prompt);
 
     // If successfully retrieved summary, store in Supabase
     if (summary != null) {
       // Send to database
-      print(summary);
+      return summary;
     } else {
       print('Failed to get response from GPT');
     }
+    return null;
   }
 
   // Retrieve any desired info from the medical appointment

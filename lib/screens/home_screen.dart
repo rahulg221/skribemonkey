@@ -48,7 +48,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 padding: const EdgeInsets.only(
                     right: 16.0,
                     top: 15.0), // Add margin to the right and top padding
-                child: Container(
+                child: SizedBox(
                   width: 200, // Set width of the search bar
                   child: TextField(
                     decoration: InputDecoration(
@@ -84,7 +84,7 @@ class _HomeScreenState extends State<HomeScreen> {
               alignment: Alignment.topCenter, // Align image to the top
               padding: const EdgeInsets.only(top: 50), // Add padding if needed
               child: Image.asset(
-                'lib/images/pfp2.png', // Adjust the path to your image
+                'assets/images/pfp2.png', // Adjust the path to your image
                 width: 150, // Set desired image width
                 height: 150, // Set desired image height
               ),
