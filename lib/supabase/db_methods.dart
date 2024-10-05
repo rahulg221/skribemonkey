@@ -3,7 +3,7 @@ import 'package:uuid/uuid.dart';
 
 // Methods for Supabase following CRUD style
 class DatabaseMethods {
-  final SupabaseClient _client = Supabase.instance.client;
+  final _client = Supabase.instance.client;
 
   // User methods
 
@@ -24,16 +24,16 @@ class DatabaseMethods {
       final userId = authResponse.user?.id ?? 'unknown-id';
 
       // Insert additional user information into the users table
-      final userResponse = await _client.from('users').insert({
-          'id': userId,
-          'name': name,
-          'email': email,
-          'role': role,
-          'created_at': DateTime.now().toIso8601String(), // Set current timestamp
+      await _client.rpc('AddUser', params: {
+        'id': userId,
+        'name': name,
+        'email': email,
+        'role': role,
+        'created_at': DateTime.now().toIso8601String()
       });
     }
-    catch (error){
-      print("Error creating user: $error");
+    on PostgrestException catch (error){
+      print(error.toString());
     }
   }
 
@@ -41,82 +41,68 @@ class DatabaseMethods {
   Future<List<Map<String, dynamic>>?> fetchUsers() async {
     try {
       // Fetch all users
-      final response = await _client
-        .from('users')
-        .select();
-
-      if (response.isEmpty == true) {
-        // Return the fetched data as a list of maps
+      final response = await _client.rpc('SelectAllUsers');
+      
+      if (response.error != null) {
         throw Exception('Failed to fetch users');
+        
       } 
       else {
-        return response;
+        final List<dynamic> rows = response.data;
+        return response.values;
       }
     } 
-    catch (error) {
-      print('Error fetching users: $error');
-      return null;
+    on PostgrestException catch (error){
+      print(error.toString());
     }
   }
 
   Future<Iterable<dynamic>?> fetchUserById(String userId) async {
     try {
       // Fetch user by ID
-      final response = await _client
-        .from('users')
-        .select()
-        .eq('id', userId)
-        .single();
+      final response = await _client.rpc('GetUserByID', params: {
+        'id': userId
+      });
 
-      if (response.isEmpty == true) {
+      if (response.error != null) {
         throw Exception('Failed to fetch user: $userId');
         
       } 
       else {
+        final List<dynamic> rows = response.data;
         return response.values;
       }
     } 
-    catch (error) {
-      print('Error fetching user: $error');
+    on PostgrestException catch (error){
+      print(error.toString());
       return null;
     }
   }
 
   // Update User
-  Future<void> updateUser(String userId, Map<String, dynamic> updates) async {
+  Future<void> updateUser(String userId, String name, String email, String role) async {
     try{
-      final response = await _client.from('users').update(updates).eq('id', userId);
-
-      if (response.statusCode != 201) {
-        throw Exception("Error updating user information");
-      }
-      else{
-        print("User updated successfully");
-      }
+      await _client.rpc('UpdateUser', params: {
+        'name': name,
+        'email': email,
+        'role': role
+      });
     }
-    catch (error){
-      print(error);
+    on PostgrestException catch (error){
+      print(error.toString());
     }
-    
   }
 
   // Delete User
   Future<void> deleteUser(String userId) async {
     try{
-      final response = await _client.from('users').delete().eq('id', userId);
-
-      if (response.statusCode != 201) {
-        throw Exception("Error deleting user");
-      }
-      else{
-        print('User deleted successfully');
-      }
+      await _client.rpc('DeleteUser', params: {
+        'id': userId
+      });
     }
-
-    catch (error){
-      print(error);
+    on PostgrestException catch (error){
+      print(error.toString());
     }
-    
   }
 
 
@@ -128,22 +114,18 @@ class DatabaseMethods {
       final String patient_id = Uuid().v4();
 
       // Insert additional user information into the users table
-      final userResponse = await _client.from('users').insert({
-          'id': patient_id,
-          'user_id': user_id,
-          'name': name,
-          'email': email,
-          'gender': gender,
-          'preexisting_conditions': preexisting_conditions,
-          'created_at': DateTime.now().toIso8601String(), // Set current timestamp
+      await _client.rpc('AddPatient', params: {
+        'id': patient_id,
+        'user_id': user_id,
+        'name': name,
+        'email': email,
+        'gender': gender,
+        'preexisting_conditions': preexisting_conditions,
+        'created_at': DateTime.now().toIso8601String()
       });
-
-      if(userResponse == null){
-        throw Exception("Error creating patient");
-      }
     }
-    catch (error){
-      print(error);
+    on PostgrestException catch (error){
+      print(error.toString());
     }
   }
 
@@ -151,20 +133,19 @@ class DatabaseMethods {
   Future<List<Map<String, dynamic>>?> fetchPatients() async {
     try {
       // Fetch all users
-      final response = await _client
-        .from('patients')
-        .select();
+      final response = await _client.rpc('SelectAllPatients');
 
-      if (response.isEmpty == true) {
-        // Return the fetched data as a list of maps
-        throw Exception('Failed to fetch users');
+      if (response.error != null) {
+        throw Exception('Failed to fetch patients');
+        
       } 
       else {
-        return response;
+        final List<dynamic> rows = response.data;
+        return response.values;
       }
     } 
-    catch (error) {
-      print(error);
+    on PostgrestException catch (error){
+      print(error.toString());
       return null;
     }
   }
@@ -172,61 +153,51 @@ class DatabaseMethods {
   Future<Iterable<dynamic>?> fetchPatientById(String patient_id) async {
     try {
       // Fetch user by ID
-      final response = await _client
-        .from('users')
-        .select()
-        .eq('id', patient_id)
-        .single();
+      final response = await _client.rpc('GetPatientByID', params: {
+        'id': patient_id
+      });
 
-      if (response.isEmpty == true) {
-        throw Exception('Failed to fetch user: $patient_id');
+      if (response.error != null) {
+        throw Exception('Failed to fetch entry: $patient_id');
         
       } 
       else {
+        final List<dynamic> rows = response.data;
         return response.values;
       }
     } 
-    catch (error) {
-      print(error);
+    on PostgrestException catch (error){
+      print(error.toString());
       return null;
     }
   }
 
   // Update Patient
-  Future<void> updatePatient(String patient_id, Map<String, dynamic> updates) async {
+  Future<void> updatePatient(String patient_id, String user_id, String name, String email, String gender, Iterable preexisting_conditions) async {
     try{
-      final response = await _client.from('patients').update(updates).eq('id', patient_id);
-
-      if (response.statusCode != 201) {
-        throw Exception("Error updating patient information");
-      }
-      else{
-        print("User updated successfully");
-      }
+      await _client.rpc('UpdatePatient', params: {
+        'user_id': user_id,
+        'name': name,
+        'email': email,
+        'gender': gender,
+        'preexisting_conditions': preexisting_conditions
+      });
     }
-    catch (error){
-      print(error);
-    }
-    
+    on PostgrestException catch (error){
+      print(error.toString());
+    }  
   }
 
   // Delete Patient
   Future<void> deletePatient(String patient_id) async {
     try{
-      final response = await _client.from('patients').delete().eq('id', patient_id);
-
-      if (response.statusCode != 201) {
-        throw Exception("Error deleting patient");
-      }
-      else{
-        print('User deleted successfully');
-      }
+      await _client.rpc('DeletePatient', params: {
+        'id': patient_id
+      });
     }
-
-    catch (error){
-      print(error);
+    on PostgrestException catch (error){
+      print(error.toString());
     }
-    
   }
 
 
@@ -239,24 +210,20 @@ class DatabaseMethods {
       final String entry_id = Uuid().v4();
    
       // Insert additional user information into the users table
-      final userResponse = await _client.from('entry').insert({
-          'id': entry_id,
-          'patient_id': patient_id,
-          'user_id': user_id,
-          'condition': condition,
-          'treatment': treatment,
-          'urgency_level': urgency_level,
-          'created_at': DateTime.now().toIso8601String(),
-          'RAW_summary': RAW_summary,
-          'Summary': Summary,
+      await _client.rpc('AddEntry', params: {
+        'id': id,
+        'patient_id': patient_id,
+        'user_id': user_id,
+        'condition': condition,
+        'treatment': treatment,
+        'urgency_level': urgency_level,
+        'created_at': DateTime.now().toIso8601String(),
+        'RAW_summary': RAW_summary, 
+        'Summary': Summary
       });
-
-      if(userResponse == null){
-        throw Exception("Error creating user");
-      }
     }
-    catch (error){
-      print(error);
+    on PostgrestException catch (error){
+      print(error.toString());
     }
   }
 
@@ -264,81 +231,70 @@ class DatabaseMethods {
   Future<List<Map<String, dynamic>>?> fetchEntrys() async {
     try {
       // Fetch all users
-      final response = await _client
-        .from('users')
-        .select();
+      final response = await _client.rpc('SelectAllEntries');
 
-      if (response.isEmpty == true) {
-        // Return the fetched data as a list of maps
-        throw Exception('Failed to fetch users');
+      if (response.error != null) {
+        throw Exception('Failed to fetch entries');
+        
       } 
       else {
-        return response;
+        final List<dynamic> rows = response.data;
+        return response.values;
       }
     } 
-    catch (error) {
-      print(error);
+    on PostgrestException catch (error){
+      print(error.toString());
       return null;
     }
   }
 
-  Future<Iterable<dynamic>?> fetchEntryById(String patient_id) async {
+  Future<Iterable<dynamic>?> fetchEntryById(String entry_id) async {
     try {
       // Fetch user by ID
-      final response = await _client
-        .from('entry')
-        .select()
-        .eq('id', patient_id)
-        .single();
+      final response = await _client.rpc('GetEntryByID', params: {
+        'id': entry_id
+      });
 
-      if (response.isEmpty == true) {
-        throw Exception('Failed to fetch entry: $patient_id');
+      if (response.error != null) {
+        throw Exception('Failed to fetch entry: $entry_id');
         
       } 
       else {
+        final List<dynamic> rows = response.data;
         return response.values;
       }
     } 
-    catch (error) {
-      print(error);
+    on PostgrestException catch (error){
+      print(error.toString());
       return null;
     }
   }
 
   // Update Entry
-  Future<void> updateEntry(String patient_id, Map<String, dynamic> updates) async {
+  Future<void> updateEntry(String entry_id, String user_id, String condition, String treatment, String urgency_level) async {
     try{
-      final response = await _client.from('entry').update(updates).eq('id', patient_id);
-
-      if (response.statusCode != 201) {
-        throw Exception("Error updating entry information");
-      }
-      else{
-        print("Entry updated successfully");
-      }
+      await _client.rpc('UpdateEntry', params: {
+        'user_id': user_id,
+        'condition': condition,
+        'treatment': treatment,
+        'urgency_level': urgency_level,
+        'id': entry_id
+      });
     }
-    catch (error){
-      print(error);
+    on PostgrestException catch (error){
+      print(error.toString());
     }
-    
   }
 
   // Delete Entry
   Future<void> deleteEntry(String entry_id) async {
     try{
-      final response = await _client.from('users').delete().eq('id', entry_id);
-
-      if (response.statusCode != 201) {
-        throw Exception("Error deleting entry");
-      }
-      else{
-        print('Entry deleted successfully');
-      }
+      await _client.rpc('DeleteEntry', params: {
+        'id': entry_id
+      });
     }
-
-    catch (error){
-      print(error);
+    on PostgrestException catch (error){
+      print(error.toString());
     }
-    
   }
 }
