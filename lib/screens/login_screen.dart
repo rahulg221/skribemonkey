@@ -86,6 +86,33 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
+  // Focus nodes for email and password fields
+  final FocusNode emailFocusNode = FocusNode();
+  final FocusNode passwordFocusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Add listeners to focus nodes to detect when the fields are focused/unfocused
+    emailFocusNode.addListener(() {
+      setState(() {});
+    });
+    passwordFocusNode.addListener(() {
+      setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    // Clean up the controllers and focus nodes when the widget is disposed
+    emailCont.dispose();
+    passwordCont.dispose();
+    emailFocusNode.dispose();
+    passwordFocusNode.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -98,33 +125,75 @@ class _LoginScreenState extends State<LoginScreen> {
               "Skribe Monkey",
               style: TextStyle(
                 color: Palette.primaryColor,
-                fontWeight: FontWeight.bold,
                 fontSize: 60,
+                fontFamily: 'quick',
               ),
             ),
+
             const SizedBox(height: 32), // Add some space below the title
             SizedBox(
               width: 300,
               child: TextField(
                 controller: emailCont,
+                focusNode: emailFocusNode,
                 decoration: InputDecoration(
                   labelText: 'Email',
-                  border: OutlineInputBorder(),
+                  filled: true,
+                  fillColor: emailFocusNode.hasFocus
+                      ? Palette.primaryColor.withOpacity(0.1)
+                      : Colors.white, // White when not focused
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                        color: const Color.fromARGB(255, 211, 211, 211),
+                        width: 2),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide:
+                        BorderSide(color: Palette.primaryColor, width: 2),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
                 ),
               ),
             ),
-            const SizedBox(height: 16),
+
+            const SizedBox(
+                height: 16), // Adjusted padding between email and password
             SizedBox(
               width: 300,
               child: TextField(
                 controller: passwordCont,
+                focusNode: passwordFocusNode,
                 decoration: InputDecoration(
                   labelText: 'Password',
-                  border: OutlineInputBorder(),
+                  filled: true,
+                  fillColor: passwordFocusNode.hasFocus
+                      ? Palette.primaryColor.withOpacity(0.1)
+                      : Colors.white, // White when not focused
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                        color: const Color.fromARGB(255, 211, 211, 211),
+                        width: 2),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Palette.primaryColor,
+                      width: 2,
+                    ),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
                 ),
                 obscureText: true,
               ),
             ),
+
             const SizedBox(height: 32),
             SizedBox(
               width: 150, // Reduced width of the Login button
@@ -137,7 +206,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(25),
                 ),
-                elevation: 0, // Remove drop shadow
+                elevation: 0,
+                hoverElevation: 0, // Remove drop shadow
                 child: const Center(
                   child: Text(
                     "Login",
@@ -157,17 +227,18 @@ class _LoginScreenState extends State<LoginScreen> {
                 onPressed: () {
                   isLoading ? null : _handleSignUp;
                 },
-                color: Palette.secondaryColor,
+                color: const Color.fromARGB(255, 228, 228, 228),
                 padding: const EdgeInsets.all(16),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(25),
                 ),
-                elevation: 0, // Remove drop shadow
+                elevation: 0,
+                hoverElevation: 0, // Remove drop shadow
                 child: const Center(
                   child: Text(
                     "Sign Up",
                     style: TextStyle(
-                      color: Colors.white,
+                      color: Palette.primaryColor,
                       fontWeight: FontWeight.bold,
                       fontSize: 15,
                     ),
