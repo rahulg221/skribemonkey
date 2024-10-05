@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:skribemonkey/utils/color_scheme.dart';
+import 'package:skribemonkey/screens/new_patient_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -99,7 +100,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   top: 50,
                   left: 100,
                   child: MaterialButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      // Navigate to NewPatientScreen when the button is pressed
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const NewPatientScreen()),
+                      );
+                    },
                     color: const Color.fromARGB(255, 211, 211, 211),
                     shape: RoundedRectangleBorder(
                       borderRadius:
