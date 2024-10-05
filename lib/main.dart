@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:skribemonkey/screens/home_screen.dart';
 import 'package:skribemonkey/screens/login_screen.dart';
-<<<<<<< HEAD
+import 'package:skribemonkey/screens/register_screen.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 void main() async {
@@ -12,9 +11,6 @@ void main() async {
     anonKey:
         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im16c2FreXljc3Nsa2pzempoaG1nIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjgwOTIzMzEsImV4cCI6MjA0MzY2ODMzMX0.YV_zNu8oP2lQNyz5Py-yRuH0Vdctocl_gnGfl67KWgE',
   );
-=======
-import 'package:skribemonkey/screens/register_screen.dart';
->>>>>>> 131b46bd447e32037fa13b0b33a2899d43965ebb
 
   runApp(const MyApp());
 }
@@ -32,10 +28,6 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
         ),
-<<<<<<< HEAD
         home: Scaffold(appBar: AppBar(), body: LoginScreen()));
-=======
-        home: Scaffold(appBar: AppBar(), body: RegisterScreen()));
->>>>>>> 131b46bd447e32037fa13b0b33a2899d43965ebb
   }
 }
