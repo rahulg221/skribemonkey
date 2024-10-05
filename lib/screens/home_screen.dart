@@ -24,7 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
               padding: const EdgeInsets.only(
                   top: 25.0), // Add bottom padding to the title
               child: const Text(
-                'Welcome!',
+                'Scribe Monkey',
                 style: TextStyle(
                   color: Colors.white,
                   fontFamily: 'quick',
@@ -79,15 +79,16 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           // Grey Column with Image
           Container(
-            width: 170, // Set width of the grey column
+            width: 250, // Set width of the grey column
             color: Palette.primaryColor.withOpacity(0.3),
             child: Container(
               alignment: Alignment.topCenter, // Align image to the top
-              padding: const EdgeInsets.only(top: 50), // Add padding if needed
+              padding:
+                  const EdgeInsets.only(bottom: 100), // Add padding if needed
               child: Image.asset(
-                'lib/images/pfp2.png', // Adjust the path to your image
-                width: 150, // Set desired image width
-                height: 150, // Set desired image height
+                'lib/images/logo3.png', // Adjust the path to your image
+                width: 250, // Set desired image width
+                height: 250, // Set desired image height
               ),
             ),
           ),
@@ -114,7 +115,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           BorderRadius.circular(25), // Rounded corners
                     ),
                     padding: const EdgeInsets.symmetric(
-                        vertical: 60, horizontal: 70), // Add some padding
+                        vertical: 35, horizontal: 455), // Add some padding
                     child: Column(
                       mainAxisSize: MainAxisSize.min, // Use minimum space
                       children: [

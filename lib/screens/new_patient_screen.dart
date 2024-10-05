@@ -60,7 +60,6 @@ class _NewPatientScreenState extends State<NewPatientScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Register New Patient'),
         backgroundColor: Palette.primaryColor,
         elevation: 0, // Remove shadow
       ),
@@ -242,7 +241,7 @@ class _NewPatientScreenState extends State<NewPatientScreen> {
                   ),
                 ),
 
-                const SizedBox(height: 32),
+                const SizedBox(height: 10),
                 SizedBox(
                   width: 150,
                   child: MaterialButton(
