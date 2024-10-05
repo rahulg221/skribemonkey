@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'dart:html' as html;
 import 'package:skribemonkey/external_apis/transcription_methods.dart';
 
-void main() {
+Future<void> main() async {
   runApp(const MyApp());
 }
 
