@@ -35,7 +35,6 @@ Future<void> signUp(String email, String password) async {
   }
 }
 
-/*
 // Sign In Function
 Future<void> signIn(String email, String password) async {
   try {
@@ -53,40 +52,6 @@ Future<void> signIn(String email, String password) async {
   } catch (error) {
     // Handle other errors
     print('Unexpected error during sign-in: $error');
-  }
-}
-*/
-
-/// Sign In Function
-Future<AuthResponse> signIn(String email, String password) async {
-  try {
-    final response = await Supabase.instance.client.auth.signInWithPassword(
-      email: email,
-      password: password,
-    );
-
-    if (response.session == null) {
-      throw AuthException(message: 'Invalid email or password.');
-    }
-
-    // Sign-in successful
-    if (kDebugMode) {
-      print('Sign-in successful: ${response.user?.email}');
-    }
-
-    return response;
-  } on AuthException catch (error) {
-    // Handle authentication errors
-    if (kDebugMode) {
-      print('Error during sign-in: ${error.message}');
-    }
-    rethrow; // Propagate the exception to the caller
-  } catch (error) {
-    // Handle any other errors
-    if (kDebugMode) {
-      print('Unexpected error during sign-in: $error');
-    }
-    rethrow; // Propagate the exception to the caller
   }
 }
 
