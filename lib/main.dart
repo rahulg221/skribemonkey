@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'dart:html' as html;
 import 'package:skribemonkey/external_apis/transcription_methods.dart';
 
-void main() {
+Future<void> main() async {
+  // Load environment variables
+  await dotenv.load(fileName: ".env")
   runApp(const MyApp());
 }
 
