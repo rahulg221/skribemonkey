@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:skribemonkey/screens/login_screen.dart';
+import 'package:skribemonkey/screens/new_patient_screen.dart';
 import 'package:skribemonkey/screens/register_screen.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
