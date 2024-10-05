@@ -4,8 +4,6 @@ import 'dart:html' as html;
 import 'package:skribemonkey/external_apis/transcription_methods.dart';
 
 Future<void> main() async {
-  // Load environment variables
-  await dotenv.load(fileName: ".env")
   runApp(const MyApp());
 }
 
