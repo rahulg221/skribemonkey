@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:skribemonkey/utils/color_scheme.dart';
 
-class PatientScreen extends StatefulWidget {
-  const PatientScreen({super.key});
+class NewPatientScreen extends StatefulWidget {
+  const NewPatientScreen({super.key});
 
   @override
-  State<PatientScreen> createState() => _PatientScreenState();
+  State<NewPatientScreen> createState() => _NewPatientScreenState();
 }
 
-class _PatientScreenState extends State<PatientScreen> {
+class _NewPatientScreenState extends State<NewPatientScreen> {
   final fNameCont = TextEditingController();
   final lNameCont = TextEditingController();
 
