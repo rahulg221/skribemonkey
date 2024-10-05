@@ -1,5 +1,3 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:flutter/material.dart';
 import 'package:skribemonkey/screens/home_screen.dart';
 import 'package:skribemonkey/utils/color_scheme.dart';
@@ -37,6 +35,7 @@ class _LoginScreenState extends State<LoginScreen> {
       // Check if the user is logged in
       final session = Supabase.instance.client.auth.currentSession;
       if (session != null) {
+        if (!mounted) return;
         // Navigate to the home screen
         Navigator.pushReplacement(
           context,
@@ -63,6 +62,13 @@ class _LoginScreenState extends State<LoginScreen> {
 
   // Function to handle sign-up
   Future<void> _handleSignUp() async {
+    if (emailCont.text.isEmpty || passwordCont.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please enter your email and password.')),
+      );
+      return;
+    }
+
     setState(() {
       isLoading = true;
     });
@@ -132,34 +138,38 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
 
             const SizedBox(height: 32), // Add some space below the title
-            SizedBox(
-              width: 300,
-              child: TextField(
-                controller: emailCont,
-                focusNode: emailFocusNode,
-                decoration: InputDecoration(
-                  labelText: 'Email',
-                  filled: true,
-                  fillColor: emailFocusNode.hasFocus
-                      ? Palette.primaryColor.withOpacity(0.1)
-                      : Colors.white, // White when not focused
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                        color: const Color.fromARGB(255, 211, 211, 211),
-                        width: 2),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide:
-                        BorderSide(color: Palette.primaryColor, width: 2),
-                    borderRadius: BorderRadius.circular(10),
+            if (isLoading)
+              const CircularProgressIndicator()
+            else ...[
+              SizedBox(
+                width: 300,
+                child: TextField(
+                  controller: emailCont,
+                  focusNode: emailFocusNode,
+                  decoration: InputDecoration(
+                    labelText: 'Email',
+                    filled: true,
+                    fillColor: emailFocusNode.hasFocus
+                        ? Palette.primaryColor.withOpacity(0.1)
+                        : Colors.white, // White when not focused
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                          color: const Color.fromARGB(255, 211, 211, 211),
+                          width: 2),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide:
+                          BorderSide(color: Palette.primaryColor, width: 2),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                   ),
                 ),
               ),
-            ),
+            ],
 
             const SizedBox(
                 height: 16), // Adjusted padding between email and password
