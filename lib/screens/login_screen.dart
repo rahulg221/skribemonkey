@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:skribemonkey/screens/home_screen.dart';
 import 'package:skribemonkey/utils/color_scheme.dart';
 import 'package:skribemonkey/supabase/auth_methods.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -39,7 +40,7 @@ class _LoginScreenState extends State<LoginScreen> {
         // Navigate to the home screen
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => LoginScreen()),
+          MaterialPageRoute(builder: (context) => HomeScreen()),
         );
       } else {
         // Show error message
@@ -198,9 +199,7 @@ class _LoginScreenState extends State<LoginScreen> {
             SizedBox(
               width: 150, // Reduced width of the Login button
               child: MaterialButton(
-                onPressed: () {
-                  isLoading ? null : _handleLogin();
-                },
+                onPressed: isLoading ? null : _handleLogin,
                 color: Palette.primaryColor,
                 padding: const EdgeInsets.all(16),
                 shape: RoundedRectangleBorder(
@@ -224,9 +223,7 @@ class _LoginScreenState extends State<LoginScreen> {
             SizedBox(
               width: 150, // Same width as Login button
               child: MaterialButton(
-                onPressed: () {
-                  isLoading ? null : _handleSignUp;
-                },
+                onPressed: isLoading ? null : _handleSignUp,
                 color: const Color.fromARGB(255, 228, 228, 228),
                 padding: const EdgeInsets.all(16),
                 shape: RoundedRectangleBorder(
