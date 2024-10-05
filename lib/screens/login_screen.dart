@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:skribemonkey/screens/home_screen.dart';
 import 'package:skribemonkey/utils/color_scheme.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -47,6 +48,11 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Image.asset(
+              'lib/images/logo2.png',
+              width: 250,
+              height: 250,
+            ),
             Text(
               "Skribe Monkey",
               style: TextStyle(
@@ -55,7 +61,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 fontFamily: 'quick',
               ),
             ),
-
             const SizedBox(height: 32), // Add some space below the title
             SizedBox(
               width: 300,
@@ -85,7 +90,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
             ),
-
             const SizedBox(
                 height: 16), // Adjusted padding between email and password
             SizedBox(
@@ -119,13 +123,16 @@ class _LoginScreenState extends State<LoginScreen> {
                 obscureText: true,
               ),
             ),
-
             const SizedBox(height: 32),
             SizedBox(
               width: 150, // Reduced width of the Login button
               child: MaterialButton(
                 onPressed: () {
-                  // Placeholder for login action
+                  // Navigate to HomeScreen when Login is clicked
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const HomeScreen()),
+                  );
                 },
                 color: Palette.primaryColor,
                 padding: const EdgeInsets.all(16),

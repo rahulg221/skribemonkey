@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:skribemonkey/utils/color_scheme.dart';
 
-class PatientScreen extends StatefulWidget {
-  const PatientScreen({super.key});
+class NewPatientScreen extends StatefulWidget {
+  const NewPatientScreen({super.key});
 
   @override
-  State<PatientScreen> createState() => _PatientScreenState();
+  State<NewPatientScreen> createState() => _NewPatientScreenState();
 }
 
-class _PatientScreenState extends State<PatientScreen> {
+class _NewPatientScreenState extends State<NewPatientScreen> {
   final fNameCont = TextEditingController();
   final lNameCont = TextEditingController();
 
@@ -64,6 +64,11 @@ class _PatientScreenState extends State<PatientScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Image.asset(
+              'lib/images/logo2.png',
+              width: 250,
+              height: 250,
+            ),
             Text(
               "Register New Patient",
               style: TextStyle(
@@ -183,7 +188,7 @@ class _PatientScreenState extends State<PatientScreen> {
               elevation: 0,
               hoverElevation: 0,
               color: const Color.fromARGB(255, 211, 211, 211),
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(20),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(25),
               ),
@@ -237,7 +242,7 @@ class _PatientScreenState extends State<PatientScreen> {
                   // Placeholder for sign-up action
                 },
                 color: Palette.primaryColor,
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(25),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(25),
                 ),
@@ -249,7 +254,7 @@ class _PatientScreenState extends State<PatientScreen> {
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
-                      fontSize: 15,
+                      fontSize: 20,
                     ),
                   ),
                 ),
