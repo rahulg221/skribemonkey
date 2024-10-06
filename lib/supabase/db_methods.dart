@@ -104,19 +104,19 @@ class DatabaseMethods {
   // Patient Methods
 
   // Create a Patient
-  Future<void> createPatient(String name, String email, String user_id,
-      String gender, Iterable preexisting_conditions) async {
+  Future<void> createPatient(String name, String email, String userId,
+      String gender, Iterable preexistingConditions) async {
     try {
-      final String patient_id = Uuid().v4();
+      final String patientId = Uuid().v4();
 
       // Insert additional user information into the users table
       final userResponse = await _client.from('users').insert({
-        'id': patient_id,
-        'user_id': user_id,
+        'id': patientId,
+        'user_id': userId,
         'name': name,
         'email': email,
         'gender': gender,
-        'preexisting_conditions': preexisting_conditions,
+        'preexisting_conditions': preexistingConditions,
         'created_at': DateTime.now().toIso8601String(), // Set current timestamp
       });
 
@@ -146,14 +146,14 @@ class DatabaseMethods {
     }
   }
 
-  Future<Iterable<dynamic>?> fetchPatientById(String patient_id) async {
+  Future<Iterable<dynamic>?> fetchPatientById(String patientId) async {
     try {
       // Fetch user by ID
       final response =
-          await _client.from('users').select().eq('id', patient_id).single();
+          await _client.from('users').select().eq('id', patientId).single();
 
       if (response.isEmpty == true) {
-        throw Exception('Failed to fetch user: $patient_id');
+        throw Exception('Failed to fetch user: $patientId');
       } else {
         return response.values;
       }
@@ -165,10 +165,10 @@ class DatabaseMethods {
 
   // Update Patient
   Future<void> updatePatient(
-      String patient_id, Map<String, dynamic> updates) async {
+      String patientId, Map<String, dynamic> updates) async {
     try {
       final response =
-          await _client.from('patients').update(updates).eq('id', patient_id);
+          await _client.from('patients').update(updates).eq('id', patientId);
 
       if (response.statusCode != 201) {
         throw Exception("Error updating patient information");
@@ -181,10 +181,10 @@ class DatabaseMethods {
   }
 
   // Delete Patient
-  Future<void> deletePatient(String patient_id) async {
+  Future<void> deletePatient(String patientId) async {
     try {
       final response =
-          await _client.from('patients').delete().eq('id', patient_id);
+          await _client.from('patients').delete().eq('id', patientId);
 
       if (response.statusCode != 201) {
         throw Exception("Error deleting patient");
@@ -201,26 +201,26 @@ class DatabaseMethods {
   // Create a Entry
   Future<void> createEntry(
       String id,
-      String patient_id,
-      String user_id,
+      String patientId,
+      String userId,
       String treatment,
       String condition,
-      String urgency_level,
-      String RAW_summary,
+      String urgencyLevel,
+      String rawSummary,
       String Summary) async {
     try {
-      final String entry_id = Uuid().v4();
+      final String entryId = Uuid().v4();
 
       // Insert additional user information into the users table
       final userResponse = await _client.from('entry').insert({
-        'id': entry_id,
-        'patient_id': patient_id,
-        'user_id': user_id,
+        'id': entryId,
+        'patient_id': patientId,
+        'user_id': userId,
         'condition': condition,
         'treatment': treatment,
-        'urgency_level': urgency_level,
+        'urgency_level': urgencyLevel,
         'created_at': DateTime.now().toIso8601String(),
-        'RAW_summary': RAW_summary,
+        'RAW_summary': rawSummary,
         'Summary': Summary,
       });
 
@@ -250,14 +250,14 @@ class DatabaseMethods {
     }
   }
 
-  Future<Iterable<dynamic>?> fetchEntryById(String patient_id) async {
+  Future<Iterable<dynamic>?> fetchEntryById(String patientId) async {
     try {
       // Fetch user by ID
       final response =
-          await _client.from('entry').select().eq('id', patient_id).single();
+          await _client.from('entry').select().eq('id', patientId).single();
 
       if (response.isEmpty == true) {
-        throw Exception('Failed to fetch entry: $patient_id');
+        throw Exception('Failed to fetch entry: $patientId');
       } else {
         return response.values;
       }
@@ -269,10 +269,10 @@ class DatabaseMethods {
 
   // Update Entry
   Future<void> updateEntry(
-      String patient_id, Map<String, dynamic> updates) async {
+      String patientId, Map<String, dynamic> updates) async {
     try {
       final response =
-          await _client.from('entry').update(updates).eq('id', patient_id);
+          await _client.from('entry').update(updates).eq('id', patientId);
 
       if (response.statusCode != 201) {
         throw Exception("Error updating entry information");
@@ -285,9 +285,9 @@ class DatabaseMethods {
   }
 
   // Delete Entry
-  Future<void> deleteEntry(String entry_id) async {
+  Future<void> deleteEntry(String entryId) async {
     try {
-      final response = await _client.from('users').delete().eq('id', entry_id);
+      final response = await _client.from('users').delete().eq('id', entryId);
 
       if (response.statusCode != 201) {
         throw Exception("Error deleting entry");

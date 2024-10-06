@@ -99,7 +99,7 @@ class _NewPatientScreenState extends State<NewPatientScreen> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Image.asset(
-                  'lib/images/logo2.png',
+                  'assets/images/logo2.png',
                   width: 250,
                   height: 250,
                 ),

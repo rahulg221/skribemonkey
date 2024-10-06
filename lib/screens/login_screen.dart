@@ -74,7 +74,8 @@ class _LoginScreenState extends State<LoginScreen> {
     });
 
     try {
-      await signUp(emailCont.text.trim(), passwordCont.text.trim());
+      await signUp(emailCont.text.trim(), passwordCont.text.trim(), 'test_name',
+          'test_role');
 
       // Inform the user to verify their email
       ScaffoldMessenger.of(context).showSnackBar(
@@ -127,17 +128,12 @@ class _LoginScreenState extends State<LoginScreen> {
       child: Center(
         child: Column(
           children: [
-            const SizedBox(height: 35),
-            Image.asset(
-              'lib/images/logo2.png',
-              width: 270,
-              height: 270,
-            ),
+            Image.asset('assets/images/logo2.png', width: 180, height: 180),
             Text(
               "Skribe Monkey",
               style: TextStyle(
                 color: Palette.primaryColor,
-                fontSize: 70,
+                fontSize: 40,
                 fontFamily: 'quick',
               ),
             ),
