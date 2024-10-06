@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:skribemonkey/screens/audio_screen.dart';
+import 'package:skribemonkey/screens/home_screen.dart';
 import 'package:skribemonkey/screens/login_screen.dart';
 import 'package:skribemonkey/screens/new_patient_screen.dart';
 import 'package:skribemonkey/screens/register_screen.dart';
@@ -24,12 +25,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Flutter Dem',
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-          useMaterial3: true,
-        ),
-        home: Scaffold(appBar: AppBar(), body: AudioRecorder()));
+      debugShowCheckedModeBanner: false,
+      title: 'Skribe Monkey',
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        useMaterial3: true,
+      ),
+      home: Scaffold(appBar: AppBar(), body: LoginScreen()),
+      routes: {'/new-patient': (context) => const NewPatientScreen()},
+    );
   }
 }
