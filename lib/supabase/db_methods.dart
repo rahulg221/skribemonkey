@@ -188,6 +188,39 @@ class DatabaseMethods {
     }
   }
 
+  Future<List<Patient>> searchPatient(String name) async {
+    try {
+      List<String> nameParts = name.split(' ');
+      List<Map<String, dynamic>> patients;
+
+      // Only one part of name entered
+      if (nameParts.length == 1) {
+        // Only one name entered
+        String firstName = nameParts[0];
+        patients = await _client.rpc('getpatientbyname', params: {
+          'first_name': firstName,
+          'last_name': firstName
+        });
+      } 
+      // First and last name entered
+      else {
+        String firstName = nameParts[0];
+        String lastName = nameParts[1];
+        // Fetch user by ID
+        patients = await _client.rpc('getpatientbyname', params: {
+          'first_name': firstName,
+          'last_name': lastName
+        });
+      }
+
+      return patients.map((e) => Patient.fromJson(e)).toList();
+    } on PostgrestException catch (error) {
+      print(error.toString());
+
+      throw Exception('An unexpected error occured: $error');
+    }
+  }
+
   // Update Patient
   Future<void> updatePatient(String patient_id, String user_id, String name,
       String email, String gender, Iterable preexisting_conditions) async {
@@ -220,10 +253,8 @@ class DatabaseMethods {
       String id,
       String patientId,
       String userId,
-      String treatment,
       String condition,
       String urgencyLevel,
-      String rawSummary,
       String Summary) async {
     try {
       final String entryId = Uuid().v4();
@@ -234,10 +265,8 @@ class DatabaseMethods {
         'patient_id': patientId,
         'user_id': userId,
         'condition': condition,
-        'treatment': treatment,
         'urgency_level': urgencyLevel,
         'created_at': DateTime.now().toIso8601String(),
-        'RAW_summary': rawSummary,
         'Summary': Summary
       });
     } on PostgrestException catch (error) {
@@ -299,13 +328,11 @@ class DatabaseMethods {
   }
 
   // Update Entry
-  Future<void> updateEntry(String entry_id, String user_id, String condition,
-      String treatment, String urgency_level) async {
+  Future<void> updateEntry(String entry_id, String user_id, String condition, String urgency_level) async {
     try {
       await _client.rpc('UpdateEntry', params: {
         'user_id': user_id,
         'condition': condition,
-        'treatment': treatment,
         'urgency_level': urgency_level,
         'id': entry_id
       });

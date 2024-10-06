@@ -16,6 +16,10 @@ class _HomeScreenState extends State<HomeScreen> {
   List<String> registeredUsers = []; // To keep track of registered users
   List<Patient> patients = [];
 
+  // For the search bar functionality
+  TextEditingController searchCont = TextEditingController();
+  DatabaseMethods DbManager = DatabaseMethods(); // Allows interactivity with database
+
   Future<void> fetchPatients() async {
     final _client = Supabase.instance.client;
     String userId = _client.auth.currentUser!.id;
@@ -79,6 +83,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: SizedBox(
                   width: 200, // Set width of the search bar
                   child: TextField(
+                    controller: searchCont,
+                    onSubmitted: (value) async {
+                      List<Patient> results = await DbManager.searchPatient(value);
+                      
+                    },
                     decoration: InputDecoration(
                       hintText: 'Search...',
                       border: InputBorder.none, // Remove border
@@ -160,6 +169,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: MaterialButton(
                         onPressed: () {
                           // Handle button press for the user
+
                         },
                         color: Palette.primaryColor, // Change color if needed
                         shape: RoundedRectangleBorder(
