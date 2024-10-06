@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:skribemonkey/external_apis/summarization_methods.dart';
+import 'package:skribemonkey/external_apis/transcription_methods.dart';
 import 'package:skribemonkey/models/patient_model.dart';
 import 'package:skribemonkey/supabase/db_methods.dart';
 import 'package:skribemonkey/utils/color_scheme.dart';
@@ -15,15 +17,29 @@ class NewEntryScreen extends StatefulWidget {
 }
 
 class _NewEntryScreenState extends State<NewEntryScreen> {
-  String summary = 'this is place holder entry';
+  String transcript = 'this is place holder entry';
 
   /*String patientId, String userId, String condition,
       String urgencyLevel, String Summary*/
 
   Future<void> createEntry() async {
+    String? transcription = await TranscriptionMethods()
+        .transcribeMp3FromAssets('assets/yapsesh.mp3');
+
+    if (transcription == null) {
+      print("Transcription failed.");
+      return;
+    } else {
+      print(transcription);
+    }
+
+    // Call the summarization method
+    final summary =
+        await SummarizationMethods().summarizeTranscript(transcription);
+
     // Call the method to create a new entry
     await DatabaseMethods()
-        .createEntry(widget.patientId, widget.userId, '', 5, summary)!;
+        .createEntry(widget.patientId, widget.userId, '', 5, summary!);
   }
 
   @override
