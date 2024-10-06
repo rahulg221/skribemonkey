@@ -15,12 +15,22 @@ class PatientScreen extends StatefulWidget {
 
 class _PatientScreenState extends State<PatientScreen> {
   Patient? patient;
+  String firstName = '';
+  String lastName = '';
+  String email = '';
+  String gender = '';
+  List<dynamic> preexistingConditions = [];
 
-  Future<Patient> getPatientData() async {
+  Future<void> getPatientData() async {
     patient = await DatabaseMethods().fetchPatientById(widget.patientId);
-    print(patient);
 
-    return patient!;
+    setState(() {
+      firstName = patient!.first_name;
+      lastName = patient!.last_name;
+      email = patient!.email;
+      gender = patient!.gender;
+      preexistingConditions = patient!.preexisting_conditions;
+    });
   }
 
   @override
@@ -57,11 +67,44 @@ class _PatientScreenState extends State<PatientScreen> {
         ),
       ),
       body: Center(
-        child: Column(
-          children: [
-            Text('Patient ID: ${widget.patientId}'),
-            Text('Patient ID: ${patient?.first_name}'),
-          ],
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              Text(
+                'Patient name: $firstName $lastName',
+                style: TextStyle(
+                  color: const Color.fromARGB(255, 0, 0, 0),
+                  fontSize: 20,
+                  fontFamily: 'quick',
+                ),
+              ),
+              Text(
+                'Email: $email',
+                style: TextStyle(
+                  color: const Color.fromARGB(255, 0, 0, 0),
+                  fontSize: 20,
+                  fontFamily: 'quick',
+                ),
+              ),
+              Text(
+                'Gender: $gender',
+                style: TextStyle(
+                  color: const Color.fromARGB(255, 0, 0, 0),
+                  fontSize: 20,
+                  fontFamily: 'quick',
+                ),
+              ),
+              Text(
+                'Conditions: ${preexistingConditions.join(', ')}',
+                style: TextStyle(
+                  color: const Color.fromARGB(255, 0, 0, 0),
+                  fontSize: 20,
+                  fontFamily: 'quick',
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

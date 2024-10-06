@@ -131,7 +131,7 @@ class _LoginScreenState extends State<LoginScreen> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                Image.asset('assets/images/logo2.png', width: 50, height: 50),
+                Image.asset('assets/images/logo2.png', width: 150, height: 150),
                 Text(
                   "Skribe Monkey",
                   style: TextStyle(
