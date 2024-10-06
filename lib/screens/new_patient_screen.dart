@@ -283,7 +283,7 @@ class _NewPatientScreenState extends State<NewPatientScreen> {
           } else {
             final String firstName = fNameCont.text;
             final String lastName = lNameCont.text;
-            final String gender = genderCont.text;
+            String gender = selectedRole!;
             final String email = emailCont.text;
             final List<String> conditions =
                 updateConditions(); // Get a list of all conditions

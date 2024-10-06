@@ -153,14 +153,12 @@ class DatabaseMethods {
   }
 
   Future<Patient?> fetchPatientById(String patientId) async {
+    print('fetching');
     try {
       // Fetch user by ID
-      final response =
+      Map<String, dynamic> patientData =
           await _client.rpc('getpatientbyid', params: {'p_id': patientId});
 
-      final List<dynamic> rows = response.data;
-      print(rows);
-      final patientData = rows.first;
       print(patientData);
       final patient = Patient.fromJson(patientData);
       print(patient);
