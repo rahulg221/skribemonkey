@@ -86,15 +86,9 @@ class _HomeScreenState extends State<HomeScreen> {
               padding:
                   const EdgeInsets.only(bottom: 100), // Add padding if needed
               child: Image.asset(
-<<<<<<< HEAD
-                'assets/images/pfp2.png', // Adjust the path to your image
-                width: 150, // Set desired image width
-                height: 150, // Set desired image height
-=======
                 'lib/images/logo3.png', // Adjust the path to your image
                 width: 250, // Set desired image width
                 height: 250, // Set desired image height
->>>>>>> fecd5ec98beb99d24a22a17b38944a8358e0e3d1
               ),
             ),
           ),
