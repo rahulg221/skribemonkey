@@ -1,5 +1,6 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:uuid/uuid.dart';
+import 'package:skribemonkey/models/patient_model.dart';
 
 // Methods for Supabase following CRUD style
 class DatabaseMethods {
@@ -42,7 +43,7 @@ class DatabaseMethods {
       // Fetch all users
       final response = await _client.rpc('SelectAllUsers');
       
-      if (response.error != null) {
+      if (response.error == null) {
         throw Exception('Failed to fetch users');
         
       } 
@@ -63,7 +64,7 @@ class DatabaseMethods {
         'id': userId
       });
 
-      if (response.error != null) {
+      if (response.error == null) {
         throw Exception('Failed to fetch user: $userId');
         
       } 
@@ -107,20 +108,19 @@ class DatabaseMethods {
   // Patient Methods
 
   // Create a Patient
-  Future<void> createPatient(String name, String email, String userId,
+  Future<void> createPatient(String firstName, String lastName, String email,
       String gender, Iterable preexistingConditions) async {
     try {
-      final String patientId = Uuid().v4();
 
       // Insert additional user information into the users table
-      await _client.rpc('AddPatient', params: {
-        'id': patientId,
-        'user_id': userId,
-        'name': name,
+      await _client.rpc('addpatient', params: {
+        'id': Uuid().v4(),
+        'user_id': Uuid().v4(),
+        'first_name': firstName,
+        'last_name': lastName,
         'email': email,
         'gender': gender,
         'preexisting_conditions': preexistingConditions,
-        'created_at': DateTime.now().toIso8601String()
       });
     }
     on PostgrestException catch (error){
