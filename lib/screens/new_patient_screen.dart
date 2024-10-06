@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:skribemonkey/screens/home_screen.dart';
 import 'package:skribemonkey/utils/color_scheme.dart';
 
 class NewPatientScreen extends StatefulWidget {
@@ -11,10 +12,12 @@ class NewPatientScreen extends StatefulWidget {
 class _NewPatientScreenState extends State<NewPatientScreen> {
   final fNameCont = TextEditingController();
   final lNameCont = TextEditingController();
+  final emailCont = TextEditingController();
 
   // Focus nodes for fName and lName fields
   final FocusNode fNameFocusNode = FocusNode();
   final FocusNode lNameFocusNode = FocusNode();
+  final FocusNode emailFocusNode = FocusNode();
 
   // Dropdown variables
   String? selectedRole;
@@ -34,6 +37,9 @@ class _NewPatientScreenState extends State<NewPatientScreen> {
     lNameFocusNode.addListener(() {
       setState(() {});
     });
+    emailFocusNode.addListener(() {
+      setState(() {});
+    });
   }
 
   void _addTextBox() {
@@ -47,22 +53,45 @@ class _NewPatientScreenState extends State<NewPatientScreen> {
     // Clean up the controllers and focus nodes when the widget is disposed
     fNameCont.dispose();
     lNameCont.dispose();
+    emailCont.dispose();
     fNameFocusNode.dispose();
     lNameFocusNode.dispose();
+    emailFocusNode.dispose();
+
     // Dispose all additional controllers
     for (var controller in additionalControllers) {
       controller.dispose();
     }
+
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Register New Patient'),
-        backgroundColor: Palette.primaryColor,
-        elevation: 0, // Remove shadow
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(80.0), // Set desired height here
+        child: SafeArea(
+          child: AppBar(
+            backgroundColor: Palette.primaryColor,
+            elevation: 0, // Remove shadow
+            leading: Padding(
+              padding: const EdgeInsets.only(
+                  top: 5.0, left: 8.0), // Add top padding here
+              child: IconButton(
+                icon: Icon(Icons.arrow_back,
+                    size: 50, color: Colors.white), // Back button icon
+                hoverColor: Colors.transparent, // Remove hover effect color
+                onPressed: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => const HomeScreen()),
+                  );
+                },
+              ),
+            ),
+          ),
+        ),
       ),
       body: SingleChildScrollView(
         // To prevent overflow when keyboard appears
@@ -70,7 +99,6 @@ class _NewPatientScreenState extends State<NewPatientScreen> {
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
-              // Removed Center to allow the content to start from the top
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Image.asset(
@@ -87,109 +115,13 @@ class _NewPatientScreenState extends State<NewPatientScreen> {
                   ),
                 ),
                 const SizedBox(height: 32), // Add some space below the title
-                SizedBox(
-                  width: 300,
-                  child: TextField(
-                    controller: fNameCont,
-                    focusNode: fNameFocusNode,
-                    decoration: InputDecoration(
-                      labelText: 'First Name',
-                      filled: true,
-                      fillColor: fNameFocusNode.hasFocus
-                          ? Palette.primaryColor.withOpacity(0.1)
-                          : Colors.white, // White when not focused
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: const Color.fromARGB(255, 211, 211, 211),
-                          width: 2,
-                        ),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Palette.primaryColor,
-                          width: 2,
-                        ),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                  ),
-                ),
+                _buildTextField(fNameCont, fNameFocusNode, 'First Name'),
                 const SizedBox(height: 16),
-                SizedBox(
-                  width: 300,
-                  child: TextField(
-                    controller: lNameCont,
-                    focusNode: lNameFocusNode,
-                    decoration: InputDecoration(
-                      labelText: 'Last Name',
-                      filled: true,
-                      fillColor: lNameFocusNode.hasFocus
-                          ? Palette.primaryColor.withOpacity(0.1)
-                          : Colors.white,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: const Color.fromARGB(255, 211, 211, 211),
-                          width: 2,
-                        ),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Palette.primaryColor,
-                          width: 2,
-                        ),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                  ),
-                ),
+                _buildTextField(lNameCont, lNameFocusNode, 'Last Name'),
                 const SizedBox(height: 16),
-                SizedBox(
-                  width: 300,
-                  child: DropdownButtonFormField<String>(
-                    value: selectedRole,
-                    decoration: InputDecoration(
-                      labelText: 'Gender',
-                      filled: true,
-                      fillColor: Colors.white,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: const Color.fromARGB(255, 211, 211, 211),
-                          width: 2,
-                        ),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Palette.primaryColor,
-                          width: 2,
-                        ),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    items: roles.map((String role) {
-                      return DropdownMenuItem<String>(
-                        value: role,
-                        child: Text(role),
-                      );
-                    }).toList(),
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        selectedRole = newValue;
-                      });
-                    },
-                  ),
-                ),
+                _buildTextField(emailCont, emailFocusNode, 'Email'),
+                const SizedBox(height: 16),
+                _buildDropdownField(),
                 const SizedBox(height: 32),
 
                 // Button to add new text boxes
@@ -210,12 +142,11 @@ class _NewPatientScreenState extends State<NewPatientScreen> {
                     ),
                   ),
                 ),
-
                 const SizedBox(height: 16),
 
                 // Display additional text boxes
                 Container(
-                  width: 450, // Set the width here to your desired value
+                  width: 600, // Set the width here to your desired value
                   child: ListView.builder(
                     shrinkWrap: true, // Prevent overflow
                     physics:
@@ -241,35 +172,115 @@ class _NewPatientScreenState extends State<NewPatientScreen> {
                     },
                   ),
                 ),
-
-                const SizedBox(height: 32),
-                SizedBox(
-                  width: 150,
-                  child: MaterialButton(
-                    onPressed: () {
-                      // Placeholder for register action
-                      // Implement your registration logic here
-                    },
-                    color: Palette.primaryColor,
-                    padding: const EdgeInsets.all(20),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(25),
-                    ),
-                    elevation: 0,
-                    hoverElevation: 0,
-                    child: const Center(
-                      child: Text(
-                        "Register",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
+                const SizedBox(height: 10),
+                _buildRegisterButton(),
               ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  SizedBox _buildTextField(
+      TextEditingController controller, FocusNode focusNode, String label) {
+    return SizedBox(
+      width: 300,
+      child: TextField(
+        controller: controller,
+        focusNode: focusNode,
+        decoration: InputDecoration(
+          labelText: label,
+          filled: true,
+          fillColor: focusNode.hasFocus
+              ? Palette.primaryColor.withOpacity(0.1)
+              : Colors.white, // White when not focused
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: const Color.fromARGB(255, 211, 211, 211),
+              width: 2,
+            ),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: Palette.primaryColor,
+              width: 2,
+            ),
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
+      ),
+    );
+  }
+
+  SizedBox _buildDropdownField() {
+    return SizedBox(
+      width: 300,
+      child: DropdownButtonFormField<String>(
+        value: selectedRole,
+        decoration: InputDecoration(
+          labelText: 'Gender',
+          filled: true,
+          fillColor: Colors.white,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: const Color.fromARGB(255, 211, 211, 211),
+              width: 2,
+            ),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: Palette.primaryColor,
+              width: 2,
+            ),
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
+        items: roles.map((String role) {
+          return DropdownMenuItem<String>(
+            value: role,
+            child: Text(role),
+          );
+        }).toList(),
+        onChanged: (String? newValue) {
+          setState(() {
+            selectedRole = newValue;
+          });
+        },
+      ),
+    );
+  }
+
+  SizedBox _buildRegisterButton() {
+    return SizedBox(
+      width: 150,
+      child: MaterialButton(
+        onPressed: () {
+          // Placeholder for register action
+          // Implement your registration logic here
+        },
+        color: Palette.primaryColor,
+        padding: const EdgeInsets.all(20),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(25),
+        ),
+        elevation: 0,
+        hoverElevation: 0,
+        child: const Center(
+          child: Text(
+            "Register",
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 20,
             ),
           ),
         ),
