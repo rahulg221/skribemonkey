@@ -73,11 +73,8 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/pfp2.png
-<<<<<<< HEAD
-=======
     - .env
     - assets/yapsesh.mp3
->>>>>>> 5063bb3ce75b44fa0588c4c7c67fd3e80da8f47e
     - assets/images/logo2.png
     - assets/images/logo3.png
 
