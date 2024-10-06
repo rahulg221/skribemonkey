@@ -26,7 +26,7 @@ class _HomeScreenState extends State<HomeScreen> {
               padding: const EdgeInsets.only(
                   top: 15.0), // Add bottom padding to the title
               child: const Text(
-                'Scribe Monkey',
+                'Skribe Monkey',
                 style: TextStyle(
                   color: Colors.white,
                   fontFamily: 'quick',
