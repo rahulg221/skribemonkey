@@ -38,8 +38,11 @@ class SummarizationMethods {
 
   // Summarize the appointment transcription
   Future<String?> summarizeTranscript(String transcript) async {
-    String prompt =
-        "CONTEXT: Emergency room nurse speaking to patient. GOAL: Summarize symptoms in one sentence then state a level of urgency 1-5.  FORMAT EXAMPLES: Head injury, light bleeding.Fractured tibula, Urgency Level (1-5): 5If the transcript does not contain any relevant information, return 'NO RELEVANT INFO' $transcript";
+    String prompt = "CONTEXT: Emergency room nurse speaking to patient. "
+        "GOAL: Summarize symptoms in one sentence then state a level of urgency 1-5. "
+        "FORMAT EXAMPLES: Head injury, light bleeding. Urgency Level (1-5): 5\n"
+        "If the transcript does not contain any relevant information, return 'NO RELEVANT INFO'.\n"
+        "$transcript";
 
     String? summary = await askGPT(prompt);
 
