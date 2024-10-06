@@ -9,6 +9,7 @@ class DatabaseMethods {
   // User methods
 
   // Create a User
+  /*
   Future<void> createUser(
       String name, String email, String password, String role) async {
     try {
@@ -34,7 +35,7 @@ class DatabaseMethods {
     } on PostgrestException catch (error) {
       print(error.toString());
     }
-  }
+  }*/
 
   // Fetch Users
   Future<List<Map<String, dynamic>>?> fetchUsers() async {
@@ -216,28 +217,19 @@ class DatabaseMethods {
   // Entry Methods
 
   // Create a Entry
-  Future<void> createEntry(
-      String id,
-      String patientId,
-      String userId,
-      String treatment,
-      String condition,
-      String urgencyLevel,
-      String rawSummary,
-      String Summary) async {
+  Future<void> createEntry(String patientId, String userId, String condition,
+      int urgencyLevel, String Summary) async {
     try {
       final String entryId = Uuid().v4();
 
       // Insert additional user information into the users table
-      await _client.rpc('AddEntry', params: {
-        'id': id,
+      await _client.rpc('addentry', params: {
+        'id': entryId,
         'patient_id': patientId,
         'user_id': userId,
         'condition': condition,
-        'treatment': treatment,
         'urgency_level': urgencyLevel,
-        'created_at': DateTime.now().toIso8601String(),
-        'RAW_summary': rawSummary,
+        //'created_at': DateTime.now().toIso8601String(),
         'Summary': Summary
       });
     } on PostgrestException catch (error) {

@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:skribemonkey/models/patient_model.dart';
+import 'package:skribemonkey/screens/new_entry_screen.dart';
 import 'package:skribemonkey/supabase/db_methods.dart';
 import 'package:skribemonkey/utils/color_scheme.dart';
 
 class PatientScreen extends StatefulWidget {
   final String patientId;
+  final String userId;
 
-  PatientScreen({required this.patientId});
+  PatientScreen({required this.patientId, required this.userId});
 
   @override
   _PatientScreenState createState() => _PatientScreenState();
@@ -101,6 +103,36 @@ class _PatientScreenState extends State<PatientScreen> {
                   color: const Color.fromARGB(255, 0, 0, 0),
                   fontSize: 20,
                   fontFamily: 'quick',
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => NewEntryScreen(
+                              patientId: patient!.id,
+                              userId: widget.userId,
+                            )),
+                  );
+                },
+                child: Container(
+                  width: 200,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    color: Colors.grey,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Center(
+                    child: Text(
+                      'New entry',
+                      style: TextStyle(
+                        color: const Color.fromARGB(255, 0, 0, 0),
+                        fontSize: 20,
+                        fontFamily: 'quick',
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ],

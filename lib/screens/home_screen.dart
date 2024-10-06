@@ -188,12 +188,16 @@ class _HomeScreenState extends State<HomeScreen> {
                     height: 60, // Set a fixed height
                     child: MaterialButton(
                       onPressed: () {
+                        final _client = Supabase.instance.client;
+                        String userId = _client.auth.currentUser!.id;
                         // Handle button press for the patient
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) =>
-                                PatientScreen(patientId: patient.id),
+                            builder: (context) => PatientScreen(
+                              patientId: patient.id,
+                              userId: userId,
+                            ),
                           ),
                         );
                       },
