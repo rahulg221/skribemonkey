@@ -23,7 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Palette.primaryColor, // Set the AppBar's primary color
             title: Padding(
               padding: const EdgeInsets.only(
-                  top: 25.0), // Add bottom padding to the title
+                  top: 15.0), // Add bottom padding to the title
               child: const Text(
                 'Scribe Monkey',
                 style: TextStyle(
