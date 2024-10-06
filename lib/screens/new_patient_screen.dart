@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:skribemonkey/screens/home_screen.dart';
+import 'package:skribemonkey/supabase/db_methods.dart';
 import 'package:skribemonkey/utils/color_scheme.dart';
 import 'package:skribemonkey/supabase/db_methods.dart';
 import 'package:uuid/uuid.dart';
@@ -14,9 +15,6 @@ class NewPatientScreen extends StatefulWidget {
 }
 
 class _NewPatientScreenState extends State<NewPatientScreen> {
-  DatabaseMethods DbManager = DatabaseMethods(); // Allows interactivity with database
-
-  // Text Editing Controllers for various input fields
   final fNameCont = TextEditingController();
   final lNameCont = TextEditingController();
   final emailCont = TextEditingController();
@@ -32,6 +30,8 @@ class _NewPatientScreenState extends State<NewPatientScreen> {
   String? selectedRole;
   final List<String> roles = ['Male', 'Female', 'Other'];
 
+  // List to hold additional text box controllers
+  final List<TextEditingController> additionalControllers = [];
 
   @override
   void initState() {
@@ -274,13 +274,6 @@ class _NewPatientScreenState extends State<NewPatientScreen> {
       width: 150,
       child: MaterialButton(
         onPressed: () {
-          final String firstName = fNameCont.text;
-          final String lastName = lNameCont.text;
-          final String gender = genderCont.text;
-          final String email = emailCont.text;
-          final List<String> conditions = updateConditions(); // Get a list of all conditions
-
-          DbManager.createPatient(firstName, lastName, email, gender, conditions); // Add patient to database
           // Validate all fields
           if (fNameCont.text.isEmpty ||
               lNameCont.text.isEmpty ||
