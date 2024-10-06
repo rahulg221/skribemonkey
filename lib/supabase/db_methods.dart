@@ -175,7 +175,7 @@ class DatabaseMethods {
     try {
       // Fetch user by ID
       List<Map<String, dynamic>> patients =
-          await _client.rpc('getpatientbydoctor', params: {'user_id': userId});
+          await _client.rpc('getpatientbydoctor', params: {'dr_id': userId});
 
       print(patients);
       print(patients.map((e) => Patient.fromJson(e)).toList());
