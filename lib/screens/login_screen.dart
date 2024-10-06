@@ -123,136 +123,141 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Center(
-        child: Column(
-          children: [
-            Image.asset('assets/images/logo2.png', width: 180, height: 180),
-            Text(
-              "Skribe Monkey",
-              style: TextStyle(
-                color: Palette.primaryColor,
-                fontSize: 40,
-                fontFamily: 'quick',
-              ),
-            ),
-            const SizedBox(height: 32), // Add some space below the title
-            if (isLoading)
-              const CircularProgressIndicator()
-            else ...[
-              SizedBox(
-                width: 300,
-                child: TextField(
-                  controller: emailCont,
-                  focusNode: emailFocusNode,
-                  decoration: InputDecoration(
-                    labelText: 'Email',
-                    filled: true,
-                    fillColor: emailFocusNode.hasFocus
-                        ? Palette.primaryColor.withOpacity(0.1)
-                        : Colors.white, // White when not focused
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                          color: const Color.fromARGB(255, 211, 211, 211),
-                          width: 2),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide:
-                          BorderSide(color: Palette.primaryColor, width: 2),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Center(
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Image.asset('assets/images/logo2.png', width: 50, height: 50),
+                Text(
+                  "Skribe Monkey",
+                  style: TextStyle(
+                    color: Palette.primaryColor,
+                    fontSize: 40,
+                    fontFamily: 'quick',
                   ),
                 ),
-              ),
-            ],
+                const SizedBox(height: 32), // Add some space below the title
+                if (isLoading)
+                  const CircularProgressIndicator()
+                else ...[
+                  SizedBox(
+                    width: 300,
+                    child: TextField(
+                      controller: emailCont,
+                      focusNode: emailFocusNode,
+                      decoration: InputDecoration(
+                        labelText: 'Email',
+                        filled: true,
+                        fillColor: emailFocusNode.hasFocus
+                            ? Palette.primaryColor.withOpacity(0.1)
+                            : Colors.white, // White when not focused
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: const Color.fromARGB(255, 211, 211, 211),
+                              width: 2),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Palette.primaryColor, width: 2),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
 
-            const SizedBox(
-                height: 16), // Adjusted padding between email and password
-            SizedBox(
-              width: 300,
-              child: TextField(
-                controller: passwordCont,
-                focusNode: passwordFocusNode,
-                decoration: InputDecoration(
-                  labelText: 'Password',
-                  filled: true,
-                  fillColor: passwordFocusNode.hasFocus
-                      ? Palette.primaryColor.withOpacity(0.1)
-                      : Colors.white, // White when not focused
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                        color: const Color.fromARGB(255, 211, 211, 211),
-                        width: 2),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Palette.primaryColor,
-                      width: 2,
+                const SizedBox(
+                    height: 16), // Adjusted padding between email and password
+                SizedBox(
+                  width: 300,
+                  child: TextField(
+                    controller: passwordCont,
+                    focusNode: passwordFocusNode,
+                    decoration: InputDecoration(
+                      labelText: 'Password',
+                      filled: true,
+                      fillColor: passwordFocusNode.hasFocus
+                          ? Palette.primaryColor.withOpacity(0.1)
+                          : Colors.white, // White when not focused
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                            color: const Color.fromARGB(255, 211, 211, 211),
+                            width: 2),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Palette.primaryColor,
+                          width: 2,
+                        ),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
                     ),
-                    borderRadius: BorderRadius.circular(10),
+                    obscureText: true,
                   ),
                 ),
-                obscureText: true,
-              ),
-            ),
-            const SizedBox(height: 40),
-            SizedBox(
-              width: 150, // Reduced width of the Login button
-              child: MaterialButton(
-                onPressed: isLoading ? null : _handleLogin,
-                color: Palette.primaryColor,
-                padding: const EdgeInsets.all(20),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(25),
-                ),
-                elevation: 0,
-                hoverElevation: 0, // Remove drop shadow
-                child: const Center(
-                  child: Text(
-                    "Login",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
+                const SizedBox(height: 40),
+                SizedBox(
+                  width: 150, // Reduced width of the Login button
+                  child: MaterialButton(
+                    onPressed: isLoading ? null : _handleLogin,
+                    color: Palette.primaryColor,
+                    padding: const EdgeInsets.all(20),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(25),
                     ),
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 32),
-            SizedBox(
-              width: 150, // Same width as Login button
-              child: MaterialButton(
-                onPressed: isLoading ? null : _handleSignUp,
-                color: const Color.fromARGB(255, 228, 228, 228),
-                padding: const EdgeInsets.all(20),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(25),
-                ),
-                elevation: 0,
-                hoverElevation: 0, // Remove drop shadow
-                child: const Center(
-                  child: Text(
-                    "Sign Up",
-                    style: TextStyle(
-                      color: Palette.primaryColor,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
+                    elevation: 0,
+                    hoverElevation: 0, // Remove drop shadow
+                    child: const Center(
+                      child: Text(
+                        "Login",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
+                      ),
                     ),
                   ),
                 ),
-              ),
+                const SizedBox(height: 32),
+                SizedBox(
+                  width: 150, // Same width as Login button
+                  child: MaterialButton(
+                    onPressed: isLoading ? null : _handleSignUp,
+                    color: const Color.fromARGB(255, 228, 228, 228),
+                    padding: const EdgeInsets.all(20),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(25),
+                    ),
+                    elevation: 0,
+                    hoverElevation: 0, // Remove drop shadow
+                    child: const Center(
+                      child: Text(
+                        "Sign Up",
+                        style: TextStyle(
+                          color: Palette.primaryColor,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

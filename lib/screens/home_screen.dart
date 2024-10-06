@@ -51,7 +51,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: PreferredSize(
-          preferredSize: Size.fromHeight(80.0), // Set desired height here
+          preferredSize: Size.fromHeight(70.0), // Set desired height here
           child: SafeArea(
             child: AppBar(
               elevation: 0, // Remove elevation
@@ -60,23 +60,43 @@ class _HomeScreenState extends State<HomeScreen> {
               title: Padding(
                 padding: const EdgeInsets.only(
                     top: 15.0), // Add bottom padding to the title
-                child: const Text(
-                  'S.M.',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontFamily: 'quick',
-                    fontSize: 30,
+                child: Center(
+                  // Center the Row
+                  child: Row(
+                    mainAxisSize:
+                        MainAxisSize.min, // Make the Row as small as possible
+                    children: [
+                      Image.asset(
+                        'assets/images/logo3.png', // Path to your image asset
+                        width: 60, // Set desired width
+                        height: 60, // Set desired height
+                      ),
+                      const SizedBox(
+                          width: 5), // Add some spacing between image and text
+                      const Padding(
+                        padding: EdgeInsets.only(
+                            left: 18.0), // Add left padding to the text
+                        child: Text(
+                          'Skribe Monkey',
+                          style: TextStyle(
+                            color: Color.fromARGB(255, 22, 22, 149),
+                            fontFamily: 'quick',
+                            fontSize: 30,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
               actions: [
                 Padding(
                   padding: const EdgeInsets.only(
-                      top: 15.0), // Add bottom padding to the icon
+                      top: 12.0), // Add bottom padding to the icon
                   child: IconButton(
                     icon: const Icon(Icons.search),
                     color: Colors.white,
-                    iconSize: 30,
+                    iconSize: 35,
                     onPressed: () {
                       // Define what happens when the search button is pressed
                     },
@@ -84,134 +104,109 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(
-                      right: 16.0,
+                      right: 27.0,
                       top: 15.0), // Add margin to the right and top padding
-                  child: SizedBox(
-                    width: 200, // Set width of the search bar
-                    child: TextField(
-                      decoration: InputDecoration(
-                        hintText: 'Search...',
-                        border: InputBorder.none, // Remove border
-                        filled: true,
-                        fillColor: Colors.white,
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius:
-                              BorderRadius.circular(10.0), // Set curve radius
-                          borderSide: BorderSide.none, // Remove border
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius:
-                              BorderRadius.circular(10.0), // Set curve radius
-                          borderSide: BorderSide.none, // Remove border
-                        ),
-                      ),
-                    ),
-                  ),
                 ),
               ],
             ),
           ),
         ),
-        body: Center(
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    GestureDetector(
-                      onTap: () async {
-                        fetchPatients();
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  GestureDetector(
+                    onTap: () async {
+                      fetchPatients();
+                    },
+                    child: Container(
+                      alignment: Alignment.center,
+                      width: 160,
+                      height: 50,
+                      decoration: BoxDecoration(
+                        color: const Color.fromARGB(
+                            255, 211, 211, 211), // Set container color
+                        borderRadius:
+                            BorderRadius.circular(15), // Rounded corners
+                      ),
+                      child: Icon(
+                        Icons.refresh,
+                        color: Palette.primaryColor,
+                        size: 30,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 30),
+                  GestureDetector(
+                    onTap: () async {
+                      // Navigate to NewPatientScreen and wait for result
+                      final newUser = await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const NewPatientScreen(),
+                        ),
+                      );
+                      // If a new user is returned, add them to the list
+                      if (newUser != null) {
+                        setState(() {
+                          registeredUsers.add(newUser);
+                        });
+                      }
+                    },
+                    child: Container(
+                      alignment: Alignment.center,
+                      width: 160,
+                      height: 50,
+                      decoration: BoxDecoration(
+                        color: const Color.fromARGB(
+                            255, 211, 211, 211), // Set container color
+                        borderRadius:
+                            BorderRadius.circular(15), // Rounded corners
+                      ),
+                      child: Icon(
+                        Icons.add,
+                        color: Palette.primaryColor,
+                        size: 30,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              // Display buttons for registered users
+              ...patients.asMap().entries.map((entry) {
+                int index = entry.key;
+                Patient patient = entry.value;
+                return Padding(
+                  padding: const EdgeInsets.only(top: 20.0),
+                  child: SizedBox(
+                    width: 350, // Set a fixed width
+                    height: 60, // Set a fixed height
+                    child: MaterialButton(
+                      onPressed: () {
+                        // Handle button press for the patient
                       },
-                      child: Container(
-                        alignment: Alignment.center,
-                        width: 160,
-                        height: 50,
-                        decoration: BoxDecoration(
-                          color: const Color.fromARGB(
-                              255, 211, 211, 211), // Set container color
-                          borderRadius:
-                              BorderRadius.circular(15), // Rounded corners
-                        ),
-                        child: Icon(
-                          Icons.refresh,
-                          color: Colors.black,
-                          size: 30,
+                      color: Palette.primaryColor, // Change color if needed
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: Text(
+                        '${patient.first_name} ${patient.last_name}', // Assuming Patient has a `name` field
+                        textAlign: TextAlign.center, // Center the text
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 25,
+                          fontFamily: 'quick',
                         ),
                       ),
                     ),
-                    const SizedBox(width: 30),
-                    GestureDetector(
-                      onTap: () async {
-                        // Navigate to NewPatientScreen and wait for result
-                        final newUser = await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const NewPatientScreen(),
-                          ),
-                        );
-                        // If a new user is returned, add them to the list
-                        if (newUser != null) {
-                          setState(() {
-                            registeredUsers.add(newUser);
-                          });
-                        }
-                      },
-                      child: Container(
-                        alignment: Alignment.center,
-                        width: 160,
-                        height: 50,
-                        decoration: BoxDecoration(
-                          color: const Color.fromARGB(
-                              255, 211, 211, 211), // Set container color
-                          borderRadius:
-                              BorderRadius.circular(15), // Rounded corners
-                        ),
-                        child: Icon(
-                          Icons.add,
-                          color: Colors.black,
-                          size: 30,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-
-                // Display buttons for registered users
-                ...patients.asMap().entries.map((entry) {
-                  int index = entry.key;
-                  Patient patient = entry.value;
-                  return Padding(
-                    padding: const EdgeInsets.only(top: 16.0),
-                    child: SizedBox(
-                      width: 350, // Set a fixed width
-                      height: 70, // Set a fixed height
-                      child: MaterialButton(
-                        onPressed: () {
-                          // Handle button press for the patient
-                        },
-                        color: Palette.primaryColor, // Change color if needed
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        child: Text(
-                          '${patient.first_name} ${patient.last_name}', // Assuming Patient has a `name` field
-                          textAlign: TextAlign.center, // Center the text
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 25,
-                            fontFamily: 'quick',
-                          ),
-                        ),
-                      ),
-                    ),
-                  );
-                }).toList(),
-              ],
-            ),
+                  ),
+                );
+              }).toList(),
+            ],
           ),
         ));
   }
