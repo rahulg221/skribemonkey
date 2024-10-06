@@ -19,34 +19,62 @@ class _PatientScreenState extends State<PatientScreen> {
           child: Column(
             children: [
               Padding(
-                padding: const EdgeInsets.only(top: 40.0),
+                padding: const EdgeInsets.only(top: 70.0),
                 child: Text(
                   "Name",
                   style: TextStyle(
                       fontFamily: 'quick', fontSize: 25, color: Colors.white),
                 ),
-              ), // Replace with your TextBox widget
+              ),
               Padding(
-                padding: const EdgeInsets.only(top: 40.0),
+                padding: const EdgeInsets.only(top: 70.0),
                 child: Text(
                   "Contact",
                   style: TextStyle(
                       fontFamily: 'quick', fontSize: 25, color: Colors.white),
                 ),
-              ), // Replace with your TextBox widget
+              ),
               Padding(
-                padding: const EdgeInsets.only(top: 40.0),
+                padding: const EdgeInsets.only(top: 70.0),
                 child: Text(
                   "Gender",
                   style: TextStyle(
                       fontFamily: 'quick', fontSize: 25, color: Colors.white),
                 ),
-              ), // Replace with your TextBox widget
+              ),
             ],
           ),
         ),
         Expanded(
-          child: const Placeholder(),
+          child: Stack(
+            alignment:
+                Alignment.bottomCenter, // Align children to bottom center
+            children: [
+              const Placeholder(),
+              Padding(
+                padding:
+                    const EdgeInsets.only(bottom: 30.0), // Adjust as needed
+                child: Container(
+                  width: 85,
+                  height: 80,
+                  child: FloatingActionButton(
+                    elevation: 0,
+                    onPressed: () {
+                      // Add your microphone action here
+                    },
+                    child: const Icon(Icons.mic,
+                        color: Colors.white, // Change the icon color here
+                        size: 50),
+                    backgroundColor:
+                        Palette.primaryColor, // Set the background color
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(32),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ],
     );
