@@ -77,6 +77,7 @@ flutter:
     - assets/yapsesh.mp3
     - assets/images/logo2.png
     - assets/images/logo3.png
+    - assets/images/logo4.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

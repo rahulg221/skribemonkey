@@ -23,7 +23,7 @@ class _NewPatientScreenState extends State<NewPatientScreen> {
   final emailCont = TextEditingController();
   final genderCont = TextEditingController();
   final List<TextEditingController> additionalControllers = [];
-
+  
   // Focus nodes for fName and lName fields
   final FocusNode fNameFocusNode = FocusNode();
   final FocusNode lNameFocusNode = FocusNode();
@@ -53,6 +53,14 @@ class _NewPatientScreenState extends State<NewPatientScreen> {
   void _addTextBox() {
     setState(() {
       additionalControllers.add(TextEditingController());
+    });
+  }
+
+  void _removeTextBox(int index) {
+    setState(() {
+      additionalControllers[index].dispose(); // Dispose the controller
+      additionalControllers
+          .removeAt(index); // Remove the controller from the list
     });
   }
 
@@ -114,8 +122,8 @@ class _NewPatientScreenState extends State<NewPatientScreen> {
               children: [
                 Image.asset(
                   'assets/images/logo2.png',
-                  width: 250,
-                  height: 250,
+                  width: 100,
+                  height: 100,
                 ),
                 Text(
                   "Register New Patient",
@@ -133,13 +141,13 @@ class _NewPatientScreenState extends State<NewPatientScreen> {
                 _buildTextField(emailCont, emailFocusNode, 'Email'),
                 const SizedBox(height: 16),
                 _buildDropdownField(),
-                const SizedBox(height: 32),
+                const SizedBox(height: 40),
 
                 // Button to add new text boxes
                 MaterialButton(
                   elevation: 0,
                   hoverElevation: 0,
-                  color: const Color.fromARGB(255, 211, 211, 211),
+                  color: const Color.fromARGB(255, 228, 228, 228),
                   padding: const EdgeInsets.all(20),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(25),
@@ -148,16 +156,17 @@ class _NewPatientScreenState extends State<NewPatientScreen> {
                   child: Text(
                     'Add Pre-Existing Condition',
                     style: TextStyle(
-                      color: Palette.primaryColor,
-                      fontSize: 15,
-                    ),
+                        color: Palette.primaryColor,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold),
                   ),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 0),
 
                 // Display additional text boxes
+// Display additional text boxes
                 Container(
-                  width: 600, // Set the width here to your desired value
+                  width: 350, // Set the width here to your desired value
                   child: ListView.builder(
                     shrinkWrap: true, // Prevent overflow
                     physics:
@@ -165,24 +174,35 @@ class _NewPatientScreenState extends State<NewPatientScreen> {
                     itemCount: additionalControllers.length,
                     itemBuilder: (context, index) {
                       return Padding(
-                        padding: const EdgeInsets.only(bottom: 12.0),
-                        child: SizedBox(
-                          width: double
-                              .infinity, // Use the full width of the container
-                          child: TextField(
-                            controller: additionalControllers[index],
-                            decoration: InputDecoration(
-                              labelText: 'Condition ${index + 1}',
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
+                        padding: const EdgeInsets.only(top: 20.0, left: 35.0),
+                        child: Row(
+                          mainAxisAlignment:
+                              MainAxisAlignment.center, // Center the Row
+                          children: [
+                            Expanded(
+                              child: TextField(
+                                controller: additionalControllers[index],
+                                decoration: InputDecoration(
+                                  labelText: 'Condition ${index + 1}',
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                ),
                               ),
                             ),
-                          ),
+                            IconButton(
+                              icon: Icon(Icons.delete,
+                                  color: Palette.primaryColor),
+                              onPressed: () => _removeTextBox(index),
+                              iconSize: 30,
+                            ),
+                          ],
                         ),
                       );
                     },
                   ),
                 ),
+
                 const SizedBox(height: 10),
                 _buildRegisterButton(),
               ],
