@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:skribemonkey/screens/home_screen.dart';
 import 'package:skribemonkey/utils/color_scheme.dart';
+import 'package:skribemonkey/supabase/db_methods.dart';
+import 'package:uuid/uuid.dart';
+
+
 
 class NewPatientScreen extends StatefulWidget {
   const NewPatientScreen({super.key});
@@ -10,9 +14,14 @@ class NewPatientScreen extends StatefulWidget {
 }
 
 class _NewPatientScreenState extends State<NewPatientScreen> {
+  DatabaseMethods DbManager = DatabaseMethods(); // Allows interactivity with database
+
+  // Text Editing Controllers for various input fields
   final fNameCont = TextEditingController();
   final lNameCont = TextEditingController();
   final emailCont = TextEditingController();
+  final genderCont = TextEditingController();
+  final List<TextEditingController> additionalControllers = [];
 
   // Focus nodes for fName and lName fields
   final FocusNode fNameFocusNode = FocusNode();
@@ -23,8 +32,6 @@ class _NewPatientScreenState extends State<NewPatientScreen> {
   String? selectedRole;
   final List<String> roles = ['Male', 'Female', 'Other'];
 
-  // List to hold additional text box controllers
-  final List<TextEditingController> additionalControllers = [];
 
   @override
   void initState() {
@@ -46,6 +53,12 @@ class _NewPatientScreenState extends State<NewPatientScreen> {
     setState(() {
       additionalControllers.add(TextEditingController());
     });
+  }
+
+  // Add conditions to array of conditions
+  List<String> updateConditions() {
+    final List<String> conditions = additionalControllers.map((controller) => controller.text).toList();
+    return conditions;
   }
 
   @override
@@ -264,8 +277,13 @@ class _NewPatientScreenState extends State<NewPatientScreen> {
       width: 150,
       child: MaterialButton(
         onPressed: () {
-          // Placeholder for register action
-          // Implement your registration logic here
+          final String firstName = fNameCont.text;
+          final String lastName = lNameCont.text;
+          final String gender = genderCont.text;
+          final String email = emailCont.text;
+          final List<String> conditions = updateConditions(); // Get a list of all conditions
+
+          DbManager.createPatient(firstName, lastName, email, gender, conditions); // Add patient to database
         },
         color: Palette.primaryColor,
         padding: const EdgeInsets.all(20),
