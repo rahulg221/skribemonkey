@@ -1,28 +1,30 @@
-class Patient{
+class Patient {
   final String id;
   final String user_id;
-  final String name;
+  final String first_name;
+  final String last_name;
   final String email;
   final String gender;
-  final String preexisting_conditions;
+  final List<dynamic> preexisting_conditions;
   final String created_at;
 
-  Patient({
-    required this.id,
-    required this.user_id,
-    required this.name,
-    required this.email,
-    required this.gender,
-    required this.preexisting_conditions,
-    required this.created_at
-  });
+  Patient(
+      {required this.id,
+      required this.user_id,
+      required this.first_name,
+      required this.last_name,
+      required this.email,
+      required this.gender,
+      required this.preexisting_conditions,
+      required this.created_at});
 
   // Convert JSON to User instance
   factory Patient.fromJson(Map<String, dynamic> json) {
     return Patient(
       id: json['id'],
       user_id: json['user_id'],
-      name: json['name'],
+      first_name: json['first_name'],
+      last_name: json['last_name'],
       email: json['email'],
       gender: json['gender'],
       preexisting_conditions: json['preexisting_conditions'],
@@ -35,7 +37,8 @@ class Patient{
     return {
       'id': id,
       'user_id': user_id,
-      'name': name,
+      'first_name': first_name,
+      'last_name': last_name,
       'email': email,
       'gender': gender,
       'preexisting_conditions': preexisting_conditions,

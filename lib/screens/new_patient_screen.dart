@@ -110,8 +110,8 @@ class _NewPatientScreenState extends State<NewPatientScreen> {
               children: [
                 Image.asset(
                   'assets/images/logo2.png',
-                  width: 250,
-                  height: 250,
+                  width: 150,
+                  height: 150,
                 ),
                 Text(
                   "Register New Patient",
