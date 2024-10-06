@@ -138,7 +138,7 @@ class DatabaseMethods {
   Future<List<Map<String, dynamic>>?> fetchPatients() async {
     try {
       // Fetch all users
-      final response = await _client.rpc('SelectAllPatients');
+      final response = await _client.rpc('selectallpatients');
 
       if (response.error == null) {
         throw Exception('Failed to fetch patients');
@@ -167,6 +167,24 @@ class DatabaseMethods {
     } on PostgrestException catch (error) {
       print(error.toString());
       return null;
+    }
+  }
+
+  // Fetch Patients by their Doctor
+  Future<List<Patient>> fetchPatientByDoctor(String userId) async {
+    try {
+      // Fetch user by ID
+      List<Map<String, dynamic>> patients =
+          await _client.rpc('getpatientbydoctor', params: {'user_id': userId});
+
+      print(patients);
+      print(patients.map((e) => Patient.fromJson(e)).toList());
+
+      return patients.map((e) => Patient.fromJson(e)).toList();
+    } on PostgrestException catch (error) {
+      print(error.toString());
+
+      throw Exception('An unexpected error occured: $error');
     }
   }
 

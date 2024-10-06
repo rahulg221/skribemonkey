@@ -2,6 +2,7 @@ import 'dart:typed_data';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:skribemonkey/external_apis/summarization_methods.dart';
 import 'package:skribemonkey/external_apis/transcription_methods.dart';
+import 'package:skribemonkey/supabase/db_methods.dart';
 
 void main() {
   test('should summarize some text from a selected mp3 file', () async {
@@ -25,5 +26,10 @@ void main() {
     // Check if the response is not null or empty
     expect(summary, isNotNull);
     expect(summary, isNotEmpty);
+  });
+
+  test('query patient by doc id', () async {
+    await DatabaseMethods()
+        .fetchPatientByDoctor('bc523e4f-347a-491e-bf07-af25ca844a64');
   });
 }
