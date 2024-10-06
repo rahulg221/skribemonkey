@@ -1,6 +1,7 @@
-import 'package:flutter/material.dart';
+/*import 'package:flutter/material.dart';
 import 'package:skribemonkey/utils/color_scheme.dart';
 import 'package:skribemonkey/screens/new_patient_screen.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -161,6 +162,160 @@ class _HomeScreenState extends State<HomeScreen> {
                               color: Colors.white,
                               fontSize: 50,
                               fontFamily: 'quick'),
+                        ),
+                      ),
+                    ),
+                  );
+                }).toList(),
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}
+*/
+
+import 'package:flutter/material.dart';
+import 'package:skribemonkey/utils/color_scheme.dart';
+import 'package:skribemonkey/screens/new_patient_screen.dart';
+
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  List<String> registeredUsers = []; // To keep track of registered users
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(80.0), // Set desired height here
+        child: SafeArea(
+          child: AppBar(
+            elevation: 0, // Remove elevation
+            backgroundColor:
+                Palette.primaryColor, // Set the AppBar's primary color
+            title: Padding(
+              padding: const EdgeInsets.only(
+                  top: 15.0), // Add bottom padding to the title
+              child: const Text(
+                'Skribe Monkey',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontFamily: 'quick',
+                  fontSize: 30,
+                ),
+              ),
+            ),
+            actions: [
+              Padding(
+                padding: const EdgeInsets.only(
+                    right: 16.0,
+                    top: 15.0), // Add margin to the right and top padding
+                child: IconButton(
+                  icon: const Icon(Icons.search),
+                  color: Colors.white,
+                  iconSize: 30,
+                  onPressed: () {
+                    // Define what happens when the search button is pressed
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+      body: Row(
+        children: [
+          // Grey Column with Image
+          Container(
+            width: 50, // Set width of the grey column
+            color: Palette.primaryColor.withOpacity(0.3),
+            child: Container(
+              alignment: Alignment.topCenter, // Align image to the top
+              padding:
+                  const EdgeInsets.only(bottom: 100), // Add padding if needed
+              child: Image.asset(
+                'lib/images/logo3.png', // Adjust the path to your image
+                width: 230, // Set desired image width
+                height: 230, // Set desired image height
+              ),
+            ),
+          ),
+          // Main content area
+          Expanded(
+            child: Stack(
+              children: [
+                Positioned(
+                  top: 50,
+                  left: 20, // Adjusted to use relative positioning
+                  right: 20, // Allows for a margin on the right
+                  child: MaterialButton(
+                    onPressed: () async {
+                      // Navigate to NewPatientScreen and wait for result
+                      final newUser = await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const NewPatientScreen(),
+                        ),
+                      );
+
+                      // If a new user is returned, add them to the list
+                      if (newUser != null) {
+                        setState(() {
+                          registeredUsers.add(newUser);
+                        });
+                      }
+                    },
+                    color: const Color.fromARGB(255, 211, 211, 211),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(25),
+                    ),
+                    padding: const EdgeInsets.symmetric(vertical: 15),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: const [
+                        Icon(
+                          Icons.add,
+                          color: Colors.white,
+                          size: 100,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                // Display buttons for registered users
+                ...registeredUsers.asMap().entries.map((entry) {
+                  int index = entry.key;
+                  String userName = entry.value;
+                  return Positioned(
+                    top: 200 + (index * 165), // Adjust position for each button
+                    left: 20, // Adjusted to use relative positioning
+                    right: 20, // Allows for a margin on the right
+                    child: SizedBox(
+                      height: 125, // Set a fixed height
+                      child: MaterialButton(
+                        onPressed: () {
+                          // Handle button press for the user
+                        },
+                        color: Palette.primaryColor, // Change color if needed
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(25),
+                        ),
+                        child: Text(
+                          userName,
+                          textAlign: TextAlign.center, // Center the text
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 24, // Reduced font size for better fit
+                            fontFamily: 'quick',
+                          ),
                         ),
                       ),
                     ),
