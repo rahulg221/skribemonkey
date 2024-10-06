@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:skribemonkey/utils/color_scheme.dart';
 import 'package:skribemonkey/screens/new_patient_screen.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});

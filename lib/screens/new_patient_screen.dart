@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:skribemonkey/utils/color_scheme.dart';
 
 class NewPatientScreen extends StatefulWidget {
-  const NewPatientScreen({super.key});
+  const NewPatientScreen({Key? key}) : super(key: key);
 
   @override
   State<NewPatientScreen> createState() => _NewPatientScreenState();
