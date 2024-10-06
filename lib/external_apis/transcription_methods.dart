@@ -10,6 +10,80 @@ import 'package:path_provider/path_provider.dart';
 class TranscriptionMethods {
   TranscriptionMethods();
 
+  Future<String?> transcribeM4aFromDirectory(String fileName) async {
+    // Load dotenv if it's not already loaded
+    if (!dotenv.isInitialized) {
+      await dotenv.load(fileName: ".env");
+    }
+
+    String apiKey = dotenv.env['OPENAI_API_KEY'] ?? '';
+    if (apiKey.isEmpty) {
+      print('Error: API key not found in .env');
+      return null;
+    }
+
+    final String apiUrl = 'https://api.openai.com/v1/audio/transcriptions';
+
+    try {
+      // Get the application documents directory
+      final directory = await getApplicationDocumentsDirectory();
+      final String filePath =
+          '${directory.path}/$fileName'; // Use provided filename
+
+      print('DIRECTORY PATH: $filePath');
+
+      // Create a file instance
+      final File file = File(filePath);
+
+      // Check if the file exists
+      if (!file.existsSync()) {
+        print('Error: audio file not found at $filePath');
+        return null;
+      }
+
+      // Check file size
+      print('File size: ${await file.length()} bytes');
+
+      // Read file as bytes
+      final bytes = await file.readAsBytes();
+
+      // Prepare headers for the transcription request
+      final headers = {
+        'Authorization': 'Bearer $apiKey',
+      };
+
+      // Create a multipart request to send to the OpenAI API
+      var request = http.MultipartRequest('POST', Uri.parse(apiUrl))
+        ..headers.addAll(headers)
+        ..fields['model'] = 'whisper-1'
+        ..files.add(
+          http.MultipartFile.fromBytes(
+            'file',
+            bytes,
+            filename: file.uri.pathSegments.last, // Use the actual filename
+            contentType: MediaType('audio', 'm4a'), // Change as needed
+          ),
+        );
+
+      // Send the request
+      final response = await request.send();
+
+      // Process the response
+      if (response.statusCode == 200) {
+        final responseBody = await response.stream.bytesToString();
+        final jsonResponse = jsonDecode(responseBody);
+        return jsonResponse['text'];
+      } else {
+        print('Error: ${response.statusCode}');
+        print('Response body: ${await response.stream.bytesToString()}');
+        return null;
+      }
+    } catch (e) {
+      print('An error occurred: $e');
+      return null;
+    }
+  }
+
   Future<String?> transcribeM4aFromFilePicker() async {
     // Load dotenv if it's not already loaded
     if (!dotenv.isInitialized) {

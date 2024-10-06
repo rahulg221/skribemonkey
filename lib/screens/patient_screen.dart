@@ -52,10 +52,14 @@ class _PatientScreenState extends State<PatientScreen> {
     init();
   }
 
-  Future<void> init() async {
-    await initRecorder();
-    await getPatientData();
-    await fetchEntries();
+  Future<void> initRecorder() async {
+    await recorder.openRecorder();
+  }
+
+  void init() {
+    initRecorder();
+    getPatientData();
+    fetchEntries();
   }
 
   Future<void> getPatientData() async {
@@ -103,10 +107,6 @@ class _PatientScreenState extends State<PatientScreen> {
     }
   }
 
-  Future<void> initRecorder() async {
-    await recorder.openRecorder();
-  }
-
   Future<void> requestMicrophonePermission() async {
     print("Checking microphone permission");
     var status = await Permission.microphone.request();
@@ -124,15 +124,17 @@ class _PatientScreenState extends State<PatientScreen> {
   }
 
   Future<void> startRecording() async {
+    if (_isRecording) {
+      print("Already recording.");
+      return; // Prevent starting another recording
+    }
+
     try {
-      // Get a directory to store the audio file
+      print('Attempting to start recording...');
       final directory = await getApplicationDocumentsDirectory();
       audioPath =
-          '${directory.path}/audiofile3.wav'; // Update class-level audioPath
+          '${directory.path}/audiofile_${DateTime.now().millisecondsSinceEpoch}.m4a';
 
-      await recorder.openRecorder();
-
-      // Start recording
       await recorder.startRecorder(
         toFile: audioPath,
         codec: Codec.aacMP4,
@@ -142,32 +144,30 @@ class _PatientScreenState extends State<PatientScreen> {
         _isRecording = true;
       });
 
-      // Wait for a moment or stop the recording after a set time
-      // For example, you could stop recording after 5 seconds (for testing)
-      await Future.delayed(Duration(seconds: 5));
-      await stopRecording(); // You can call stopRecording here if you want to auto-stop.
-
-      // Check if the audio file was created
-      final file = File(audioPath);
-      if (await file.exists()) {
-        print('Audio file created at: $audioPath');
-      } else {
-        print('Audio file not found at: $audioPath');
-      }
+      print('Recording started: $audioPath');
     } catch (e) {
       print("Error starting the recorder: $e");
     }
   }
 
   Future<void> stopRecording() async {
+    if (!_isRecording) {
+      print("Not currently recording.");
+      return; // Prevent stopping if not recording
+    }
+
     try {
+      // Stop the recorder
       await recorder.stopRecorder();
 
+      // Close the recorder after stopping
+      await recorder.closeRecorder();
+
       setState(() {
-        _isRecording = false;
+        _isRecording = false; // Update the recording state
       });
 
-      await DatabaseMethods().uploadAudioFile(audioPath, 'audiofile3.wav');
+      print('Recording stopped: $audioPath');
     } catch (e) {
       print("Error stopping the recorder: $e");
     }
@@ -175,6 +175,9 @@ class _PatientScreenState extends State<PatientScreen> {
 
   @override
   void dispose() {
+    if (_isRecording) {
+      stopRecording(); // Call stop recording to ensure it's closed properly
+    }
     recorder.closeRecorder();
     super.dispose();
   }
@@ -277,7 +280,7 @@ class _PatientScreenState extends State<PatientScreen> {
                     },
                     child: Container(
                       alignment: Alignment.center,
-                      width: 180,
+                      width: 160,
                       height: 50,
                       decoration: BoxDecoration(
                         color: const Color.fromARGB(
@@ -298,6 +301,8 @@ class _PatientScreenState extends State<PatientScreen> {
                       // Attempt to transcribe the audio file
                       String? transcript = await TranscriptionMethods()
                           .transcribeM4aFromFilePicker();
+                      //String? transcript = await TranscriptionMethods()
+                      //  .transcribeM4aFromDirectory('audiofile3.m4a');
 
                       // Check if the transcript is not null before proceeding
                       if (transcript != null) {
@@ -310,7 +315,7 @@ class _PatientScreenState extends State<PatientScreen> {
                       }
                     },
                     child: Container(
-                      width: 180,
+                      width: 160,
                       height: 50,
                       decoration: BoxDecoration(
                         color: Palette.primaryColor, // Set container color
