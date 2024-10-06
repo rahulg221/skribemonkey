@@ -82,7 +82,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           style: TextStyle(
                             color: Color.fromARGB(255, 22, 22, 149),
                             fontFamily: 'quick',
-                            fontSize: 30,
+                            fontSize: 25,
                           ),
                         ),
                       ),
@@ -126,7 +126,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                       child: Container(
                         alignment: Alignment.center,
-                        width: 180,
+                        width: 160,
                         height: 50,
                         decoration: BoxDecoration(
                           color: const Color.fromARGB(
@@ -160,7 +160,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                       child: Container(
                         alignment: Alignment.center,
-                        width: 180,
+                        width: 160,
                         height: 50,
                         decoration: BoxDecoration(
                           color: Palette.primaryColor, // Set container color
