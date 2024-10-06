@@ -7,7 +7,7 @@ import 'package:uuid/uuid.dart';
 
 
 class NewPatientScreen extends StatefulWidget {
-  const NewPatientScreen({super.key});
+  const NewPatientScreen({Key? key}) : super(key: key);
 
   @override
   State<NewPatientScreen> createState() => _NewPatientScreenState();
@@ -96,10 +96,7 @@ class _NewPatientScreenState extends State<NewPatientScreen> {
                     size: 50, color: Colors.white), // Back button icon
                 hoverColor: Colors.transparent, // Remove hover effect color
                 onPressed: () {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => const HomeScreen()),
-                  );
+                  Navigator.pop(context);
                 },
               ),
             ),
@@ -115,7 +112,7 @@ class _NewPatientScreenState extends State<NewPatientScreen> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Image.asset(
-                  'lib/images/logo2.png',
+                  'assets/images/logo2.png',
                   width: 250,
                   height: 250,
                 ),
@@ -284,6 +281,30 @@ class _NewPatientScreenState extends State<NewPatientScreen> {
           final List<String> conditions = updateConditions(); // Get a list of all conditions
 
           DbManager.createPatient(firstName, lastName, email, gender, conditions); // Add patient to database
+          // Validate all fields
+          if (fNameCont.text.isEmpty ||
+              lNameCont.text.isEmpty ||
+              emailCont.text.isEmpty ||
+              selectedRole == null ||
+              additionalControllers
+                  .any((controller) => controller.text.isEmpty)) {
+            // Show an alert or Snackbar
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Please fill out all fields.'),
+                duration: Duration(seconds: 2),
+              ),
+            );
+          } else {
+            // Handle the registration logic here
+            // You can also collect the data from all fields to pass it back
+            Navigator.pop(
+                context,
+                fNameCont.text +
+                    " " +
+                    lNameCont
+                        .text); // Pass the full name or any other info back
+          }
         },
         color: Palette.primaryColor,
         padding: const EdgeInsets.all(20),

@@ -2,14 +2,29 @@ import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 // Sign Up Function
-Future<void> signUp(String email, String password) async {
+Future<void> signUp(
+    String email, String password, String name, String role) async {
+  final _supabase = Supabase.instance.client;
+
   try {
-    final response = await Supabase.instance.client.auth.signUp(
+    final response = await _supabase.auth.signUp(
       email: email,
       password: password,
-      emailRedirectTo:
-          'io.supabase.flutterdemo://login-callback/', // Optional: For deep linking
+      //emailRedirectTo:
+      //    'io.supabase.flutterdemo://login-callback/', // Optional: For deep linking
     );
+
+    // Make the call to the stored procedure
+    final result = await _supabase.rpc('adduser', params: {
+      'id': response.user?.id,
+      'email': email,
+      'name': name,
+      'role': role,
+    });
+
+    // Check and print the result after the RPC call
+    print('Stored procedure "AddUser" called successfully.');
+    print('Result: $result');
 
     if (response.user != null) {
       // Sign-up successful
