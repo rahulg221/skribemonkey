@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:skribemonkey/screens/home_screen.dart';
 import 'package:skribemonkey/screens/login_screen.dart';
 import 'package:skribemonkey/screens/new_patient_screen.dart';
@@ -8,10 +9,11 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  await dotenv.load(fileName: ".env");
+
   await Supabase.initialize(
     url: 'https://mzsakyycsslkjszjhhmg.supabase.co',
-    anonKey:
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im16c2FreXljc3Nsa2pzempoaG1nIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjgwOTIzMzEsImV4cCI6MjA0MzY2ODMzMX0.YV_zNu8oP2lQNyz5Py-yRuH0Vdctocl_gnGfl67KWgE',
+    anonKey: 'SUPABASE_ANON_KEY',
   );
 
   runApp(const MyApp());
