@@ -11,6 +11,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  List<String> registeredUsers = []; // To keep track of registered users
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -88,50 +89,87 @@ class _HomeScreenState extends State<HomeScreen> {
                   const EdgeInsets.only(bottom: 100), // Add padding if needed
               child: Image.asset(
                 'lib/images/logo3.png', // Adjust the path to your image
-                width: 250, // Set desired image width
-                height: 250, // Set desired image height
+                width: 230, // Set desired image width
+                height: 230, // Set desired image height
               ),
             ),
           ),
           // Main content area
           Expanded(
             child: Stack(
-              // Use Stack instead of Center
               children: [
                 Positioned(
                   top: 50,
                   left: 100,
                   child: MaterialButton(
-                    onPressed: () {
-                      // Navigate to NewPatientScreen when the button is pressed
-                      Navigator.pushReplacement(
+                    onPressed: () async {
+                      // Navigate to NewPatientScreen and wait for result
+                      final newUser = await Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const NewPatientScreen()),
+                          builder: (context) => const NewPatientScreen(),
+                        ),
                       );
+
+                      // If a new user is returned, add them to the list
+                      if (newUser != null) {
+                        setState(() {
+                          registeredUsers.add(newUser);
+                        });
+                      }
                     },
                     color: const Color.fromARGB(255, 211, 211, 211),
                     shape: RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(25), // Rounded corners
+                      borderRadius: BorderRadius.circular(25),
                     ),
                     padding: const EdgeInsets.symmetric(
-                        vertical: 35, horizontal: 455), // Add some padding
+                        vertical: 15, horizontal: 455),
                     child: Column(
-                      mainAxisSize: MainAxisSize.min, // Use minimum space
+                      mainAxisSize: MainAxisSize.min,
                       children: [
                         Icon(
                           Icons.add,
                           color: Colors.white,
-                          size: 100, // Change the icon size here
-                        ), // Plus icon
+                          size: 100,
+                        ),
                       ],
                     ),
                   ),
                 ),
+                // Display buttons for registered users
+                ...registeredUsers.asMap().entries.map((entry) {
+                  int index = entry.key;
+                  String userName = entry.value;
+                  return Positioned(
+                    top: 200 + (index * 165), // Adjust position for each button
+                    left: 100,
+                    child: SizedBox(
+                      width: 995, // Set a fixed width
+                      height: 125, // Set a fixed height
+                      child: MaterialButton(
+                        onPressed: () {
+                          // Handle button press for the user
+                        },
+                        color: Palette.primaryColor, // Change color if needed
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(25),
+                        ),
+                        child: Text(
+                          userName,
+
+                          textAlign: TextAlign.center, // Center the text
+                          style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 50,
+                              fontFamily: 'quick'),
+                        ),
+                      ),
+                    ),
+                  );
+                }).toList(),
               ],
             ),
-          ),
+          )
         ],
       ),
     );
