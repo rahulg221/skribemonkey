@@ -152,18 +152,20 @@ class DatabaseMethods {
     }
   }
 
-  Future<Iterable<dynamic>?> fetchPatientById(String patientId) async {
+  Future<Patient?> fetchPatientById(String patientId) async {
     try {
       // Fetch user by ID
       final response =
-          await _client.rpc('GetPatientByID', params: {'id': patientId});
+          await _client.rpc('getpatientbyid', params: {'p_id': patientId});
 
-      if (response.error == null) {
-        throw Exception('Failed to fetch patient: $patientId');
-      } else {
-        final List<dynamic> rows = response.data;
-        return rows;
-      }
+      final List<dynamic> rows = response.data;
+      print(rows);
+      final patientData = rows.first;
+      print(patientData);
+      final patient = Patient.fromJson(patientData);
+      print(patient);
+
+      return patient;
     } on PostgrestException catch (error) {
       print(error.toString());
       return null;
