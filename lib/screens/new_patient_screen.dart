@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:skribemonkey/screens/home_screen.dart';
+import 'package:skribemonkey/supabase/db_methods.dart';
 import 'package:skribemonkey/utils/color_scheme.dart';
 
 class NewPatientScreen extends StatefulWidget {
@@ -10,9 +11,15 @@ class NewPatientScreen extends StatefulWidget {
 }
 
 class _NewPatientScreenState extends State<NewPatientScreen> {
+  DatabaseMethods DbManager =
+      DatabaseMethods(); // Allows interactivity with database
+
+  // Text Editing Controllers for various input fields
   final fNameCont = TextEditingController();
   final lNameCont = TextEditingController();
   final emailCont = TextEditingController();
+  final genderCont = TextEditingController();
+  final List<TextEditingController> additionalControllers = [];
 
   // Focus nodes for fName and lName fields
   final FocusNode fNameFocusNode = FocusNode();
@@ -23,8 +30,11 @@ class _NewPatientScreenState extends State<NewPatientScreen> {
   String? selectedRole;
   final List<String> roles = ['Male', 'Female', 'Other'];
 
-  // List to hold additional text box controllers
-  final List<TextEditingController> additionalControllers = [];
+  List<String> updateConditions() {
+    final List<String> conditions =
+        additionalControllers.map((controller) => controller.text).toList();
+    return conditions;
+  }
 
   @override
   void initState() {
@@ -276,7 +286,15 @@ class _NewPatientScreenState extends State<NewPatientScreen> {
               ),
             );
           } else {
-            // Handle the registration logic here
+            final String firstName = fNameCont.text;
+            final String lastName = lNameCont.text;
+            final String gender = genderCont.text;
+            final String email = emailCont.text;
+            final List<String> conditions =
+                updateConditions(); // Get a list of all conditions
+
+            DbManager.createPatient(firstName, lastName, email, gender,
+                conditions); // Add patient to database
             // You can also collect the data from all fields to pass it back
             Navigator.pop(
                 context,
