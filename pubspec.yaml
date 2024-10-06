@@ -35,6 +35,7 @@ dependencies:
   supabase_flutter: ^2.7.0 # Rayyan Added. Use a later version if available
   uuid: 4.5.1
   flutter_sound: ^9.16.3
+  provider: ^6.1.2
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
