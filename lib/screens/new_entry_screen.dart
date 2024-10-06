@@ -9,33 +9,32 @@ import 'package:skribemonkey/utils/color_scheme.dart';
 class NewEntryScreen extends StatefulWidget {
   final String patientId;
   final String userId;
+  final String transcript;
 
-  NewEntryScreen({required this.patientId, required this.userId});
+  NewEntryScreen(
+      {required this.patientId,
+      required this.userId,
+      required this.transcript});
 
   @override
   _NewEntryScreenState createState() => _NewEntryScreenState();
 }
 
 class _NewEntryScreenState extends State<NewEntryScreen> {
-  String transcript = 'this is place holder entry';
-
   /*String patientId, String userId, String condition,
       String urgencyLevel, String Summary*/
 
   Future<void> createEntry() async {
-    String? transcription = await TranscriptionMethods()
-        .transcribeMp3FromAssets('assets/yapsesh.mp3');
-
-    if (transcription == null) {
-      print("Transcription failed.");
+    if (widget.transcript == 'blank') {
+      print("Transcript empty");
       return;
     } else {
-      print(transcription);
+      print(widget.transcript);
     }
 
     // Call the summarization method
     final summary =
-        await SummarizationMethods().summarizeTranscript(transcription);
+        await SummarizationMethods().summarizeTranscript(widget.transcript);
 
     // Call the method to create a new entry
     await DatabaseMethods()

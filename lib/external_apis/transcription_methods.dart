@@ -1,13 +1,98 @@
+import 'dart:convert';
 import 'dart:io';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
-import 'dart:convert';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-//import 'dart:html' as html;
+import 'package:path_provider/path_provider.dart';
 
 class TranscriptionMethods {
   TranscriptionMethods();
+
+  Future<String?> transcribeM4aFromFilePicker() async {
+    // Load dotenv if it's not already loaded
+    if (!dotenv.isInitialized) {
+      await dotenv.load(fileName: ".env");
+    }
+
+    String apiKey = dotenv.env['OPENAI_API_KEY'] ?? '';
+    if (apiKey.isEmpty) {
+      print('Error: API key not found in .env');
+      return null;
+    }
+
+    final String apiUrl = 'https://api.openai.com/v1/audio/transcriptions';
+
+    try {
+      // Open the file picker to select an audio file
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+        type: FileType.custom, // Set to custom
+        allowedExtensions: ['m4a'], // Specify allowed extensions
+      );
+
+      // Check if the user has selected a file
+      if (result == null || result.files.isEmpty) {
+        print('Error: No file selected');
+        return null;
+      }
+
+      // Get the selected file
+      final String? filePath = result.files.single.path;
+
+      // Check if filePath is null
+      if (filePath == null) {
+        print('Error: File path is null');
+        return null;
+      }
+
+      final File file = File(filePath);
+
+      // Check if the file exists
+      if (!file.existsSync()) {
+        print('Error: audio file not found at $filePath');
+        return null;
+      }
+
+      // Read file as bytes
+      final bytes = await file.readAsBytes();
+
+      // Prepare headers for the transcription request
+      final headers = {
+        'Authorization': 'Bearer $apiKey',
+      };
+
+      // Create a multipart request to send to the OpenAI API
+      var request = http.MultipartRequest('POST', Uri.parse(apiUrl))
+        ..headers.addAll(headers)
+        ..fields['model'] = 'whisper-1'
+        ..files.add(
+          http.MultipartFile.fromBytes(
+            'file',
+            bytes,
+            filename: file.uri.pathSegments.last, // Use the actual filename
+            contentType: MediaType('audio', 'm4a'), // Change as needed
+          ),
+        );
+
+      // Send the request
+      final response = await request.send();
+
+      // Process the response
+      if (response.statusCode == 200) {
+        final responseBody = await response.stream.bytesToString();
+        final jsonResponse = jsonDecode(responseBody);
+        return jsonResponse['text'];
+      } else {
+        print('Error: ${response.statusCode}');
+        print('Response body: ${await response.stream.bytesToString()}');
+        return null;
+      }
+    } catch (e) {
+      print('An error occurred: $e');
+      return null;
+    }
+  }
 
   Future<String?> transcribeMp3FromAssets(String assetPath) async {
     // Load dotenv if it's not already loaded
@@ -64,80 +149,4 @@ class TranscriptionMethods {
       return null;
     }
   }
-
-  /*
-  Future<String?> transcribeMp3(html.File webFile) async {
-    await dotenv.load(fileName: ".env");
-    String apiKey = dotenv.env['OPENAI_API_KEY'].toString();
-    final String apiUrl = 'https://api.openai.com/v1/audio/transcriptions';
-
-    try {
-      // Prepare headers
-      final headers = {
-        'Authorization': 'Bearer $apiKey',
-        'Content-Type': 'multipart/form-data',
-      };
-
-      // Read the file as an array buffer
-      final reader = html.FileReader();
-      reader.readAsArrayBuffer(webFile);
-      await reader.onLoadEnd.first;
-
-      // Get the file data as bytes
-      final fileBytes = reader.result as List<int>;
-
-      // Create a multipart request
-      var request = http.MultipartRequest('POST', Uri.parse(apiUrl))
-        ..headers.addAll(headers)
-        ..fields['model'] = 'whisper-1'
-        ..files.add(
-          http.MultipartFile.fromBytes(
-            'file',
-            fileBytes,
-            filename: webFile.name,
-            contentType: MediaType('video', 'mp3'),
-          ),
-        );
-
-      // Send the request
-      final response = await request.send();
-
-      // Process the response
-      if (response.statusCode == 200) {
-        final responseBody = await response.stream.bytesToString();
-        final jsonResponse = jsonDecode(responseBody);
-        return jsonResponse['text'];
-      } else {
-        print('Error: ${response.statusCode}');
-        print(await response.stream.bytesToString());
-        return null;
-      }
-    } catch (e) {
-      print('An error occurred: $e');
-      return null;
-    }
-  }
-
-  Future<String> selectAndTranscribeFile() async {
-    String transcript = '';
-
-    html.FileUploadInputElement uploadInput = html.FileUploadInputElement()
-      ..accept = 'video/mp3'; // Restrict to MP4 files
-    uploadInput.click(); // Open the file picker dialog
-
-    uploadInput.onChange.listen((event) async {
-      final files = uploadInput.files;
-      if (files != null && files.isNotEmpty) {
-        final webFile = files.first;
-
-        // Call the transcription method
-        String? resultText = await transcribeMp3(webFile);
-        print(resultText);
-
-        transcript = resultText ?? 'Transcription failed';
-      }
-    });
-
-    return transcript;
-  }*/
 }
