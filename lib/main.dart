@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:skribemonkey/screens/audio_screen.dart';
 import 'package:skribemonkey/screens/home_screen.dart';
 import 'package:skribemonkey/screens/login_screen.dart';
 import 'package:skribemonkey/screens/new_patient_screen.dart';
@@ -32,7 +31,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: Scaffold(appBar: AppBar(), body: LoginScreen()),
-      routes: {'/new-patient': (context) => const NewPatientScreen()},
+      //routes: {'/new-patient': (context) => const NewPatientScreen()},
     );
   }
 }
