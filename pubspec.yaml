@@ -41,6 +41,7 @@ dependencies:
   record: ^5.1.2
   permission_handler: ^11.3.1
   path_provider: ^2.1.4
+  flutter_sound: ^9.16.3
 
 dev_dependencies:
   flutter_test:
