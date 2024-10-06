@@ -1,21 +1,20 @@
-class Patient{
+class Patient {
   final String id;
   final String user_id;
   final String name;
   final String email;
   final String gender;
-  final String preexisting_conditions;
-  final String created_at;
+  final List<String> preexisting_conditions;
+  final DateTime created_at;
 
-  Patient({
-    required this.id,
-    required this.user_id,
-    required this.name,
-    required this.email,
-    required this.gender,
-    required this.preexisting_conditions,
-    required this.created_at
-  });
+  Patient(
+      {required this.id,
+      required this.user_id,
+      required this.name,
+      required this.email,
+      required this.gender,
+      required this.preexisting_conditions,
+      required this.created_at});
 
   // Convert JSON to User instance
   factory Patient.fromJson(Map<String, dynamic> json) {
