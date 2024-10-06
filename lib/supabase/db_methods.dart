@@ -48,8 +48,8 @@ class DatabaseMethods {
         
       } 
       else {
-        final List<dynamic> rows = response.data;
-        return response.values;
+        final List<Map<String, dynamic>> rows = response.data;
+        return rows;
       }
     } 
     on PostgrestException catch (error){
@@ -70,7 +70,7 @@ class DatabaseMethods {
       } 
       else {
         final List<dynamic> rows = response.data;
-        return response.values;
+        return rows;
       }
     } 
     on PostgrestException catch (error){
@@ -139,8 +139,8 @@ class DatabaseMethods {
         
       } 
       else {
-        final List<dynamic> rows = response.data;
-        return response.values;
+        final List<Map<String, dynamic>> rows = response.data;
+        return rows;
       }
     } 
     on PostgrestException catch (error){
@@ -157,12 +157,12 @@ class DatabaseMethods {
       });
 
       if (response.error == null) {
-        throw Exception('Failed to fetch entry: $patientId');
+        throw Exception('Failed to fetch patient: $patientId');
         
       } 
       else {
         final List<dynamic> rows = response.data;
-        return response.values;
+        return rows;
       }
     } 
     on PostgrestException catch (error){
@@ -243,8 +243,8 @@ class DatabaseMethods {
         
       } 
       else {
-        final List<dynamic> rows = response.data;
-        return response.values;
+        final List<Map<String, dynamic>> rows = response.data;
+        return rows;
       }
     } 
     on PostgrestException catch (error){
@@ -266,7 +266,27 @@ class DatabaseMethods {
       } 
       else {
         final List<dynamic> rows = response.data;
-        return response.values;
+        return rows;
+      }
+    } 
+    on PostgrestException catch (error){
+      print(error.toString());
+      return null;
+    }
+  }
+
+  Future<Iterable<dynamic>?> fetchOrderedEntries() async {
+    try {
+      // Fetch user by ID
+      final response = await _client.rpc('SelectOrderedEntries');
+
+      if (response.error == null) {
+        throw Exception('Failed to fetch entries');
+        
+      } 
+      else {
+        final List<dynamic> rows = response.data;
+        return rows;
       }
     } 
     on PostgrestException catch (error){
