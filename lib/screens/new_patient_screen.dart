@@ -79,24 +79,19 @@ class _NewPatientScreenState extends State<NewPatientScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(80.0), // Set desired height here
-        child: SafeArea(
-          child: AppBar(
-            backgroundColor: Palette.primaryColor,
-            elevation: 0, // Remove shadow
-            leading: Padding(
-              padding: const EdgeInsets.only(
-                  top: 5.0, left: 8.0), // Add top padding here
-              child: IconButton(
-                icon: Icon(Icons.arrow_back,
-                    size: 50, color: Colors.white), // Back button icon
-                hoverColor: Colors.transparent, // Remove hover effect color
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),
-            ),
+      appBar: AppBar(
+        backgroundColor: Palette.primaryColor,
+        elevation: 0, // Remove shadow
+        leading: Padding(
+          padding: const EdgeInsets.only(
+              top: 5.0, left: 8.0), // Add top padding here
+          child: IconButton(
+            icon: Icon(Icons.arrow_back,
+                size: 35, color: Colors.white), // Back button icon
+            hoverColor: Colors.transparent, // Remove hover effect color
+            onPressed: () {
+              Navigator.pop(context);
+            },
           ),
         ),
       ),

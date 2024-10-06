@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:skribemonkey/models/patient_model.dart';
+import 'package:skribemonkey/screens/patient_screen.dart';
 import 'package:skribemonkey/supabase/db_methods.dart';
 import 'package:skribemonkey/utils/color_scheme.dart';
 import 'package:skribemonkey/screens/new_patient_screen.dart';
@@ -188,6 +189,13 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: MaterialButton(
                       onPressed: () {
                         // Handle button press for the patient
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                PatientScreen(patientId: patient.id),
+                          ),
+                        );
                       },
                       color: Palette.primaryColor, // Change color if needed
                       shape: RoundedRectangleBorder(
