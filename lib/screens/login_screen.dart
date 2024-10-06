@@ -74,7 +74,8 @@ class _LoginScreenState extends State<LoginScreen> {
     });
 
     try {
-      await signUp(emailCont.text.trim(), passwordCont.text.trim());
+      await signUp(emailCont.text.trim(), passwordCont.text.trim(), 'test_name',
+          'test_role');
 
       // Inform the user to verify their email
       ScaffoldMessenger.of(context).showSnackBar(
