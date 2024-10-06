@@ -95,39 +95,111 @@ class _PatientScreenState extends State<PatientScreen> {
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
-              Text(
-                'Patient name: $firstName $lastName',
-                style: TextStyle(
-                  color: const Color.fromARGB(255, 0, 0, 0),
-                  fontSize: 20,
-                  fontFamily: 'quick',
+              Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: const Color.fromARGB(
+                      255, 136, 151, 234), // Set container color
+                  borderRadius: BorderRadius.circular(8), // Rounded corners
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors
+                              .white, // Set container color for the label only
+                          borderRadius:
+                              BorderRadius.circular(8), // Rounded corners
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            'Full Name:',
+                            style: TextStyle(
+                              color: Palette.primaryColor,
+                              fontSize: 20,
+                              fontFamily: 'quick',
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        '$firstName $lastName',
+                        style: TextStyle(
+                          color: Palette.primaryColor,
+                          fontSize: 20,
+                          fontFamily: 'quick',
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: const Color.fromARGB(
+                              19, 0, 0, 0), // Set container color
+                          borderRadius:
+                              BorderRadius.circular(8), // Rounded corners
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            'Email: $email',
+                            style: TextStyle(
+                              color: const Color.fromARGB(255, 0, 0, 0),
+                              fontSize: 20,
+                              fontFamily: 'quick',
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: const Color.fromARGB(
+                              19, 0, 0, 0), // Set container color
+                          borderRadius:
+                              BorderRadius.circular(8), // Rounded corners
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            'Gender: $gender',
+                            style: TextStyle(
+                              color: const Color.fromARGB(255, 0, 0, 0),
+                              fontSize: 20,
+                              fontFamily: 'quick',
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: const Color.fromARGB(
+                              19, 0, 0, 0), // Set container color
+                          borderRadius:
+                              BorderRadius.circular(8), // Rounded corners
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            'Conditions: ${preexistingConditions.join(', ')}',
+                            style: TextStyle(
+                              color: const Color.fromARGB(255, 0, 0, 0),
+                              fontSize: 20,
+                              fontFamily: 'quick',
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-              Text(
-                'Email: $email',
-                style: TextStyle(
-                  color: const Color.fromARGB(255, 0, 0, 0),
-                  fontSize: 20,
-                  fontFamily: 'quick',
-                ),
-              ),
-              Text(
-                'Gender: $gender',
-                style: TextStyle(
-                  color: const Color.fromARGB(255, 0, 0, 0),
-                  fontSize: 20,
-                  fontFamily: 'quick',
-                ),
-              ),
-              Text(
-                'Conditions: ${preexistingConditions.join(', ')}',
-                style: TextStyle(
-                  color: const Color.fromARGB(255, 0, 0, 0),
-                  fontSize: 20,
-                  fontFamily: 'quick',
-                ),
-              ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -137,13 +209,13 @@ class _PatientScreenState extends State<PatientScreen> {
                     },
                     child: Container(
                       alignment: Alignment.center,
-                      width: 160,
+                      width: 180,
                       height: 50,
                       decoration: BoxDecoration(
                         color: const Color.fromARGB(
-                            255, 211, 211, 211), // Set container color
+                            255, 212, 212, 212), // Set container color
                         borderRadius:
-                            BorderRadius.circular(15), // Rounded corners
+                            BorderRadius.circular(12), // Rounded corners
                       ),
                       child: Icon(
                         Icons.refresh,
@@ -152,7 +224,7 @@ class _PatientScreenState extends State<PatientScreen> {
                       ),
                     ),
                   ),
-                  const SizedBox(width: 30), // Add space between the buttons
+                  Expanded(child: SizedBox()),
                   GestureDetector(
                     onTap: () {
                       Navigator.push(
@@ -165,18 +237,17 @@ class _PatientScreenState extends State<PatientScreen> {
                       );
                     },
                     child: Container(
-                      width: 160,
+                      width: 180,
                       height: 50,
                       decoration: BoxDecoration(
-                        color: const Color.fromARGB(
-                            255, 211, 211, 211), // Set container color
-                        borderRadius: BorderRadius.circular(10),
+                        color: Palette.primaryColor, // Set container color
+                        borderRadius: BorderRadius.circular(12),
                       ),
                       child: Center(
                         child: Text(
                           'New entry',
                           style: TextStyle(
-                            color: const Color.fromARGB(255, 0, 0, 0),
+                            color: Colors.white,
                             fontSize: 20,
                             fontFamily: 'quick',
                           ),
@@ -192,13 +263,14 @@ class _PatientScreenState extends State<PatientScreen> {
                 return Padding(
                   padding: const EdgeInsets.only(top: 20.0),
                   child: SizedBox(
-                    width: 350, // Set a fixed width
+                    width: double.infinity, // Set a fixed width
                     height: 120, // Set a fixed height
                     child: MaterialButton(
                       onPressed: () {
                         // Handle button press for the entry
                       },
-                      color: Palette.primaryColor, // Change color if needed
+                      color: const Color.fromARGB(
+                          255, 136, 151, 234), // Change color if needed
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15),
                       ),
