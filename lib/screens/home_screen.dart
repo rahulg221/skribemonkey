@@ -14,26 +14,27 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   List<String> registeredUsers = []; // To keep track of registered users
+  List<Patient> patients = [];
 
-  Future<List<Patient>> fetchPatients() async {
+  Future<void> fetchPatients() async {
     final _client = Supabase.instance.client;
     String userId = _client.auth.currentUser!.id;
+    print(userId);
 
-    final response = await DatabaseMethods().fetchPatientByDoctor(userId);
+    List<Patient> patients =
+        await DatabaseMethods().fetchPatientByDoctor(userId);
 
-    if (response.error != null) {
-      throw Exception('Failed to fetch patients');
-    }
+    print(patients);
 
-    final List<Patient> patients = response.data
-        .map((e) => Patient(
-              id: e['id'] as String,
-              name: e['name'] as String,
-              doctorId: e['doctor_id'] as String,
-            ))
-        .toList();
+    setState(() {
+      patients = patients;
+    });
+  }
 
-    return patients;
+  @override
+  void initState() {
+    super.initState();
+    fetchPatients();
   }
 
   @override
