@@ -1,5 +1,10 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:skribemonkey/external_apis/summarization_methods.dart';
+import 'package:skribemonkey/external_apis/transcription_methods.dart';
 import 'package:skribemonkey/models/entry_model.dart';
 import 'package:skribemonkey/models/patient_model.dart';
 import 'package:skribemonkey/screens/new_entry_screen.dart';
@@ -8,6 +13,13 @@ import 'package:skribemonkey/utils/color_scheme.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:path_provider/path_provider.dart';
+import 'dart:convert';
+import 'dart:io';
+import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
 import 'package:path_provider/path_provider.dart';
 
 class PatientScreen extends StatefulWidget {
@@ -24,7 +36,7 @@ class _PatientScreenState extends State<PatientScreen> {
   final FlutterSoundRecorder recorder = FlutterSoundRecorder();
   bool _isRecording = false;
   String audioPath = '';
-
+  String transcript = 'blank';
   Patient? patient;
   String firstName = '';
   String lastName = '';
@@ -33,6 +45,18 @@ class _PatientScreenState extends State<PatientScreen> {
   List<dynamic> preexistingConditions = [];
   List<Patient> patients = [];
   List<Entry> entries = [];
+
+  @override
+  void initState() {
+    super.initState();
+    init();
+  }
+
+  Future<void> init() async {
+    await initRecorder();
+    await getPatientData();
+    await fetchEntries();
+  }
 
   Future<void> getPatientData() async {
     patient = await DatabaseMethods().fetchPatientById(widget.patientId);
@@ -46,19 +70,35 @@ class _PatientScreenState extends State<PatientScreen> {
     });
   }
 
+  Future<void> createEntry(transcript) async {
+    if (transcript == 'blank') {
+      print("Transcript empty");
+      return;
+    } else {
+      print(transcript);
+    }
+
+    // Call the summarization method
+    final summary =
+        await SummarizationMethods().summarizeTranscript(transcript);
+
+    // Call the method to create a new entry
+    await DatabaseMethods()
+        .createEntry(widget.patientId, widget.userId, '', 5, summary!);
+  }
+
   Future<void> fetchEntries() async {
     try {
       List<Entry> fetchedEntries =
           await DatabaseMethods().fetchEntryByPatient(widget.patientId);
 
       setState(() {
-        entries = fetchedEntries; // Update the state variable
+        entries = fetchedEntries;
       });
 
       print(entries);
       print('Number of entries fetched: ${entries.length}');
     } catch (e) {
-      // Handle any errors
       print("Error fetching entries: $e");
     }
   }
@@ -69,74 +109,74 @@ class _PatientScreenState extends State<PatientScreen> {
 
   Future<void> requestMicrophonePermission() async {
     print("Checking microphone permission");
-    var status = await Permission.microphone.request(); // Check current status
-    print("Current permission status: $status");
+    var status = await Permission.microphone.request();
 
     if (status.isPermanentlyDenied) {
-      openAppSettings();
+      openAppSettings(); // Redirect user to app settings if permanently denied
     }
-    //if (status.isDenied) {
-    //openAppSettings();
-    //}
 
     if (status.isGranted) {
-      print('Microphone permission already granted');
+      print('Microphone permission granted');
       startRecording();
-    } else {
-      print("Requesting microphone permission");
-      status = await Permission.microphone.request(); // Request permission
-      print("New permission status: $status");
-
-      if (status.isGranted) {
-        print('Microphone permission granted');
-        startRecording(); // Start recording if permission is granted
-      } else {
-        print('Microphone permission denied');
-      }
+    } else if (status.isDenied) {
+      print("Microphone permission denied. Try again later.");
     }
   }
 
   Future<void> startRecording() async {
-    // Use path_provider to get a writable directory path
-    final directory = await getApplicationDocumentsDirectory();
-    String audioPath = '${directory.path}/audiofile.mp3';
+    try {
+      // Get a directory to store the audio file
+      final directory = await getApplicationDocumentsDirectory();
+      audioPath =
+          '${directory.path}/audiofile3.wav'; // Update class-level audioPath
 
-    // Check and request permission to record (required for iOS/Android)
-    await recorder.openRecorder();
+      await recorder.openRecorder();
 
-    // Start recording in MP3 format
-    await recorder.startRecorder(
-      toFile: audioPath,
-      codec: Codec.mp3, // Set codec to MP3
-    );
+      // Start recording
+      await recorder.startRecorder(
+        toFile: audioPath,
+        codec: Codec.aacMP4,
+      );
 
-    // Update recording state
-    setState(() {
-      _isRecording = true;
-    });
+      setState(() {
+        _isRecording = true;
+      });
+
+      // Wait for a moment or stop the recording after a set time
+      // For example, you could stop recording after 5 seconds (for testing)
+      await Future.delayed(Duration(seconds: 5));
+      await stopRecording(); // You can call stopRecording here if you want to auto-stop.
+
+      // Check if the audio file was created
+      final file = File(audioPath);
+      if (await file.exists()) {
+        print('Audio file created at: $audioPath');
+      } else {
+        print('Audio file not found at: $audioPath');
+      }
+    } catch (e) {
+      print("Error starting the recorder: $e");
+    }
   }
 
   Future<void> stopRecording() async {
-    await recorder.stopRecorder();
+    try {
+      await recorder.stopRecorder();
 
-    // Update recording state
-    setState(() {
-      _isRecording = false;
-    });
+      setState(() {
+        _isRecording = false;
+      });
+
+      await DatabaseMethods().uploadAudioFile(audioPath, 'audiofile3.wav');
+    } catch (e) {
+      print("Error stopping the recorder: $e");
+    }
   }
 
   @override
   void dispose() {
     recorder.closeRecorder();
     super.dispose();
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    getPatientData();
-    fetchEntries();
-    initRecorder();
   }
 
   @override
@@ -215,6 +255,14 @@ class _PatientScreenState extends State<PatientScreen> {
                           fontFamily: 'quick',
                         ),
                       ),
+                      Text(
+                        transcript,
+                        style: TextStyle(
+                          color: const Color.fromARGB(255, 0, 0, 0),
+                          fontSize: 20,
+                          fontFamily: 'quick',
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -246,15 +294,20 @@ class _PatientScreenState extends State<PatientScreen> {
                   ),
                   Expanded(child: SizedBox()),
                   GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => NewEntryScreen(
-                                  patientId: patient!.id,
-                                  userId: widget.userId,
-                                )),
-                      );
+                    onTap: () async {
+                      // Attempt to transcribe the audio file
+                      String? transcript = await TranscriptionMethods()
+                          .transcribeM4aFromFilePicker();
+
+                      // Check if the transcript is not null before proceeding
+                      if (transcript != null) {
+                        // If the transcription was successful, create an entry
+                        createEntry(transcript);
+                      } else {
+                        // Handle the case where transcription failed or was canceled
+                        print('Transcription failed or was canceled.');
+                        // Optionally, show an alert or some message to the user
+                      }
                     },
                     child: Container(
                       width: 180,
@@ -318,9 +371,10 @@ class _PatientScreenState extends State<PatientScreen> {
         backgroundColor: _isRecording ? Colors.black : Palette.primaryColor,
         onPressed: () async {
           if (_isRecording) {
-            stopRecording();
+            await stopRecording();
           } else {
-            await requestMicrophonePermission();
+            //await requestMicrophonePermission();
+            startRecording();
           }
         },
         child: Icon(Icons.mic, color: Colors.white, size: 30),

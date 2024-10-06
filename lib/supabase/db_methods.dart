@@ -1,3 +1,7 @@
+import 'dart:io';
+import 'dart:typed_data';
+
+import 'package:path_provider/path_provider.dart';
 import 'package:skribemonkey/models/entry_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:uuid/uuid.dart';
@@ -6,6 +10,18 @@ import 'package:skribemonkey/models/patient_model.dart';
 // Methods for Supabase following CRUD style
 class DatabaseMethods {
   final _client = Supabase.instance.client;
+
+  Future<void> uploadAudioFile(String audioPath, String fileName) async {
+    try {
+      // Upload the audio file to Supabase storage directly using the file path
+      final response =
+          await _client.storage.from('audio').upload(fileName, File(audioPath));
+
+      // Check if the upload was successful
+    } catch (e) {
+      print('An error occurred: $e');
+    }
+  }
 
   // User methods
 
