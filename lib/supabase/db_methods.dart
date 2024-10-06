@@ -1,3 +1,4 @@
+import 'package:skribemonkey/models/entry_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:uuid/uuid.dart';
 import 'package:skribemonkey/models/patient_model.dart';
@@ -171,6 +172,23 @@ class DatabaseMethods {
     }
   }
 
+  Future<List<Entry>> fetchEntryByPatient(String patientId) async {
+    try {
+      // Fetch user by ID
+      List<Map<String, dynamic>> entries =
+          await _client.rpc('getentrybypatient', params: {'p_id': patientId});
+
+      print(entries);
+      print(entries.map((e) => Entry.fromJson(e)).toList());
+
+      return entries.map((e) => Entry.fromJson(e)).toList();
+    } on PostgrestException catch (error) {
+      print(error.toString());
+
+      throw Exception('An unexpected error occured: $error');
+    }
+  }
+
   // Fetch Patients by their Doctor
   Future<List<Patient>> fetchPatientByDoctor(String userId) async {
     try {
@@ -227,7 +245,7 @@ class DatabaseMethods {
         'id': entryId,
         'patient_id': patientId,
         'user_id': userId,
-        'condition': condition,
+        'condition': 'mt',
         'urgency_level': urgencyLevel,
         //'created_at': DateTime.now().toIso8601String(),
         'Summary': Summary
