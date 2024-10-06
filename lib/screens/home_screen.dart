@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:skribemonkey/models/patient_model.dart';
+import 'package:skribemonkey/supabase/db_methods.dart';
 import 'package:skribemonkey/utils/color_scheme.dart';
 import 'package:skribemonkey/screens/new_patient_screen.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -12,6 +14,28 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   List<String> registeredUsers = []; // To keep track of registered users
+
+  Future<List<Patient>> fetchPatients() async {
+    final _client = Supabase.instance.client;
+    String userId = _client.auth.currentUser!.id;
+
+    final response = await DatabaseMethods().fetchPatientByDoctor(userId);
+
+    if (response.error != null) {
+      throw Exception('Failed to fetch patients');
+    }
+
+    final List<Patient> patients = response.data
+        .map((e) => Patient(
+              id: e['id'] as String,
+              name: e['name'] as String,
+              doctorId: e['doctor_id'] as String,
+            ))
+        .toList();
+
+    return patients;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,7 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
               padding: const EdgeInsets.only(
                   top: 15.0), // Add bottom padding to the title
               child: const Text(
-                'Scribe Monkey',
+                'S.M.',
                 style: TextStyle(
                   color: Colors.white,
                   fontFamily: 'quick',
@@ -79,28 +103,13 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: Row(
         children: [
-          // Grey Column with Image
-          Container(
-            width: 250, // Set width of the grey column
-            color: Palette.primaryColor.withOpacity(0.3),
-            child: Container(
-              alignment: Alignment.topCenter, // Align image to the top
-              padding:
-                  const EdgeInsets.only(bottom: 100), // Add padding if needed
-              child: Image.asset(
-                'assets/images/logo3.png', // Adjust the path to your image
-                width: 250, // Set desired image width
-                height: 250, // Set desired image height
-              ),
-            ),
-          ),
-          // Main content area
           Expanded(
             child: Stack(
               children: [
                 Positioned(
                   top: 50,
-                  left: 100,
+                  left: 10,
+                  right: 10,
                   child: MaterialButton(
                     onPressed: () async {
                       // Navigate to NewPatientScreen and wait for result
@@ -142,7 +151,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   String userName = entry.value;
                   return Positioned(
                     top: 200 + (index * 165), // Adjust position for each button
-                    left: 100,
+                    left: 10,
+                    right: 10,
                     child: SizedBox(
                       width: 995, // Set a fixed width
                       height: 125, // Set a fixed height
