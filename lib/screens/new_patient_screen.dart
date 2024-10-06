@@ -83,10 +83,7 @@ class _NewPatientScreenState extends State<NewPatientScreen> {
                     size: 50, color: Colors.white), // Back button icon
                 hoverColor: Colors.transparent, // Remove hover effect color
                 onPressed: () {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => const HomeScreen()),
-                  );
+                  Navigator.pop(context);
                 },
               ),
             ),
